@@ -1,5 +1,5 @@
-const { Octokit } = require('@octokit/core');
-const fetch = require('node-fetch'); // Import the fetch implementation
+import { Octokit } from "@octokit/core";
+import fetch from "node-fetch"; // Import the fetch implementation
 
 async function fetchPullRequestFiles() {
   try {
@@ -10,22 +10,25 @@ async function fetchPullRequestFiles() {
       },
     });
 
-    const response = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}/files', {
-      owner: process.env.INPUT_OWNER,
-      repo: process.env.INPUT_REPO,
-      pull_number: process.env.INPUT_PULL_NUMBER,
-      headers: {
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-    });
+    const response = await octokit.request(
+      "GET /repos/{owner}/{repo}/pulls/{pull_number}/files",
+      {
+        owner: process.env.INPUT_OWNER,
+        repo: process.env.INPUT_REPO,
+        pull_number: process.env.INPUT_PULL_NUMBER,
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      }
+    );
 
     const files = response.data;
-    console.log('Fetched files:', files);
+    console.log("Fetched files:", files);
 
     // Set the 'files' output
     process.stdout.write(JSON.stringify({ files }));
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
     process.exit(1);
   }
 }
