@@ -1,0 +1,15 @@
+{
+  "name": "pr-data-action",
+  "version": "1.0.0",
+  "description": "Github action for fetch files data from PR",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@octokit/core": "^5.0.0"
+  }
+}
