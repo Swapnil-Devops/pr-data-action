@@ -31,15 +31,33 @@ async function fetchPullRequestFiles() {
     // Filter the files based on the allowed extensions
     const filteredFiles = files.filter(file => {
       const fileExtension = file.filename.slice(file.filename.lastIndexOf("."));
-      return allowedExtensions.includes( fileExtension );
+      return allowedExtensions.includes(fileExtension);
     });
 
     // Extract and display the filtered file names
     const filteredFileNames = filteredFiles.map(file => file.filename);
     console.log("Filtered Files:", filteredFileNames);
 
+    // Read and check the first non-blank line of each filtered file
+    for (const file of filteredFiles) {
+      const content = fs.readFileSync(file.filename, "utf-8");
+      const lines = content.split("\n");
+      let firstNonBlankLine = null;
+
+      for (const line of lines) {
+        const trimmedLine = line.trim();
+        if (trimmedLine.length > 0) {
+          firstNonBlankLine = trimmedLine;
+          break;
+        }
+      }
+
+      console.log('File:', file.filename);
+      console.log('First non-blank line:', firstNonBlankLine);
+    }
+
     // Set the 'files' output
-    process.stdout.write(JSON.stringify({ files }));
+    // process.stdout.write(JSON.stringify({ files }));
   } catch (error) {
     console.error("Error:", error);
     process.exit(1);
