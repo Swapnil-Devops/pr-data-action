@@ -25,18 +25,18 @@ async function fetchPullRequestFiles() {
     const files = response.data;
     console.log("Fetched files:", files);
 
-            // Define the list of allowed file extensions
-            const allowedExtensions = [".js", ".ts", ".py", ".rs", ".cpp", ".cxs", ".hpp"];
+    // Define the list of allowed file extensions
+    const allowedExtensions = [".js", ".ts", ".py", ".rs", ".cpp", ".cxs", ".hpp"];
 
-            // Filter the files based on the allowed extensions
-            const filteredFiles = files.filter(file => {
-                const fileExtension = file.filename.slice(((file.filename.lastIndexOf(".") - 1) >>> 0) + 2);
-                return allowedExtensions.includes('.'+{ fileExtension });
-            });
-    
-            // Extract and display the filtered file names
-            const filteredFileNames = filteredFiles.map(file => file.filename);
-            console.log("Filtered Files:", filteredFileNames);
+    // Filter the files based on the allowed extensions
+    const filteredFiles = files.filter(file => {
+      const fileExtension = file.filename.slice(file.filename.lastIndexOf("."));
+      return allowedExtensions.includes( fileExtension );
+    });
+
+    // Extract and display the filtered file names
+    const filteredFileNames = filteredFiles.map(file => file.filename);
+    console.log("Filtered Files:", filteredFileNames);
 
     // Set the 'files' output
     process.stdout.write(JSON.stringify({ files }));
