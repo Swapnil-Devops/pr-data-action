@@ -35,11 +35,7 @@ async function fetchPullRequestFiles() {
       return allowedExtensions.includes(fileExtension);
     });
 
-    // Extract and display the filtered file names
-    const filteredFileNames = filteredFiles.map(file => file.filename);
-    console.log("Filtered Files:", filteredFileNames);
-
-    // Read and check the first non-blank line of each filtered file
+    const matchingFilenames = [];
     for (const file of filteredFiles) {
       const content = fs.readFileSync(file.filename, "utf-8");
       const lines = content.split("\n");
@@ -53,10 +49,18 @@ async function fetchPullRequestFiles() {
         }
       }
 
-      console.log('File:', file.filename);
-      console.log('First non-blank line:', firstNonBlankLine);
+      // Check if the first non-blank line contains "generate" and "testcase"
+      if (firstNonBlankLine && firstNonBlankLine.includes("generate") && firstNonBlankLine.includes("testcase")) {
+        console.log('File:', file.filename);
+        console.log('First non-blank line:', firstNonBlankLine);
+
+        // Add the filename to the matchingFilenames array
+        matchingFilenames.push(file.filename);
+      }
     }
 
+    // Print the matching filenames
+    console.log('Matching Filenames:', matchingFilenames);
     // Set the 'files' output
     // process.stdout.write(JSON.stringify({ files }));
   } catch (error) {
