@@ -1,5 +1,6 @@
 import { Octokit } from "@octokit/core";
 import fetch from "node-fetch"; // Import the fetch implementation
+import fs from "fs";
 
 async function fetchPullRequestFiles() {
   try {
