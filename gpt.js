@@ -39,7 +39,7 @@ class OpenAIAssistant {
 
       if (Array.isArray(responseData.choices) && responseData.choices.length > 0) {
         assistantReply = responseData.choices[0].message.content;
-        console.log(assistantReply);
+        // console.log(assistantReply);
         core.setOutput("body", assistantReply);
       } else {
         console.log("No valid response from the assistant.");
