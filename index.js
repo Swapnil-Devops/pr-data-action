@@ -2,6 +2,8 @@ import { Octokit } from "@octokit/core";
 import fetch from "node-fetch";
 import fs from "fs";
 import core from "@actions/core";
+
+
 async function fetchAndProcessFiles() {
   try {
     const octokit = new Octokit({
@@ -51,9 +53,7 @@ async function fetchAndProcessFiles() {
             console.log('File:', file.filename);
             console.log('First matching line:', firstMatchingLine);
 
-            let fileContents = `Generate testcase for this code: ${fileContent}`;
-
-            filteredFileContents.push(fileContents);
+            filteredFileContents.push(fileContent);
 
             // Log the entire content of the file
             console.log('File Content:', fileContent);
