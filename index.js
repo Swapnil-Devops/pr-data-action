@@ -31,7 +31,7 @@ async function fetchAndProcessFiles() {
 
     // Define the list of allowed file extensions
     const allowedExtensions = [".js", ".ts", ".py", ".rs", ".cpp", ".cxs", ".hpp"];
-    let filteredFileContents = [];
+
     for (const file of files) {
       // Check if the file has an allowed extension
       const fileExtension = file.filename.slice(file.filename.lastIndexOf("."));
@@ -59,16 +59,21 @@ async function fetchAndProcessFiles() {
             console.log("gpt reply: ", response);
 
 
-
-            let responsevalidation = fileContent + 'This is the code.' + response + 'This are the testcases for the code. Reply as true if all test cases pass and false even if the one the testcases fails.  Do not provide any explanations. Do not respond with anything except the true or false.' ;
+            let responsevalidation = fileContent + 'This is the code.' + response + 'This are the testcases for the code. Reply as true if all test cases pass and false even if the one the testcases fails.  Do not provide any explanations. Do not respond with anything except the true or false.';
             console.log('last prompt :', responsevalidation)
 
-            const valdiation = await generator.generate(responsevalidation);
+            const validation = await generator.generate(responsevalidation);
 
-            console.log('valdation',valdiation);
+            console.log('valdation', validation);
 
+            if (validation == 'true') {
+              // Rename the file with a ".test" suffix
+              const newFileName = file.filename.replace(fileExtension, ".test" + fileExtension);
 
-            // filteredFileContents.push(fileContent);
+              // Write the response data to the renamed file
+              fs.writeFileSync(newFileName, response);
+            }
+
 
 
           }
