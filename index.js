@@ -1,8 +1,8 @@
 import { Octokit } from "@octokit/core";
 import fetch from "node-fetch";
 import fs from "fs";
-import core from "@actions/core";
 import OpenAIAssistant from "./gpt.js";
+
 const generator = new OpenAIAssistant();
 
 async function fetchAndProcessFiles() {
@@ -27,7 +27,6 @@ async function fetchAndProcessFiles() {
     );
 
     const files = response.data;
-    // console.log("Fetched files:", files);
 
     // Define the list of allowed file extensions
     const allowedExtensions = [".js", ".ts", ".py", ".rs", ".cpp", ".cxs", ".hpp"];
@@ -36,9 +35,12 @@ async function fetchAndProcessFiles() {
       // Check if the file has an allowed extension
       const fileExtension = file.filename.slice(file.filename.lastIndexOf("."));
       if (allowedExtensions.includes(fileExtension) && (file.status != 'removed')) {
+
         try {
+
           // Fetch the content of the file from GitHub
           const fileContentResponse = await octokit.request("GET " + file.raw_url);
+
           let fileContent = fileContentResponse.data;
 
           // Split the content into lines
@@ -56,25 +58,20 @@ async function fetchAndProcessFiles() {
             let fileContents = 'I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except of the code. Also include import packages in the code. The code is:' + fileContent;
 
             const response = await generator.generate(fileContents);
-            console.log("gpt reply: ", response);
-
 
             let responsevalidation = fileContent + 'This is the code.' + response + 'This are the testcases for the code. Reply as true if all test cases pass and false even if the one the testcases fails.  Do not provide any explanations. Do not respond with anything except the true or false.';
-            console.log('last prompt :', responsevalidation)
 
             const validation = await generator.generate(responsevalidation);
 
             console.log('valdation', validation);
 
             if (validation == 'true') {
-              // Rename the file with a ".test" suffix
+              // Name the file with a ".test" suffix
               const newFileName = file.filename.replace(fileExtension, ".test" + fileExtension);
 
-              // Write the response data to the renamed file
+              // Write the response data to the new file
               fs.writeFileSync(newFileName, response);
             }
-
-
 
           }
         } catch (error) {
@@ -82,8 +79,6 @@ async function fetchAndProcessFiles() {
         }
       }
     }
-    // console.log('Filtered file content: ',filteredFileContents);
-    // core.setOutput("matchingFiles",filteredFileContents);
   } catch (error) {
     console.error("Error:", error);
     process.exit(1);
