@@ -63,10 +63,11 @@ async function fetchAndProcessFiles() {
             let fileContents = 'I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except of the code. Also include import packages in the code. The code is:' + fileContent;
 
             const testcases = await generator.generate(fileContents);
+            console.log('testcasese:',testcases);
 
-            let responsevalidation = fileContent + 'This is the code.' + testcases + 'This are the testcases for the code. Reply as "True" if all test cases pass and "False" even if the one the testcases fails.  Do not provide any explanations. Do not respond with anything except the true or false.';
+            let testcasevalidation = fileContent + 'This is the code.' + testcases + 'This are the testcases for the code. Reply as "True" if all test cases pass and "False" even if the one the testcases fails.  Do not provide any explanations. Do not respond with anything except the true or false.';
 
-            const validation = await generator.generate(responsevalidation);
+            const validation = await generator.generate(testcasevalidation);
 
             console.log('valdation', validation);
 
