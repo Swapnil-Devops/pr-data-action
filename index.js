@@ -61,11 +61,11 @@ async function fetchAndProcessFiles() {
 
 
 
-            // let responsevalidation = 'I want you to act like a code interpreter. I will give you code, and its testcases. Execute the testcases based on code and give output of testcases. Do not provide any explanations. Do not respond with anything except the output of the code. The code is:' + fileContent +'the testcases are:' + response ;
+            let responsevalidation = fileContent + 'This is the code.' + response + 'This are the testcases for the code. Reply as true if all test cases pass and false even if the one the testcases fails.  Do not provide any explanations. Do not respond with anything except the true or false.' ;
 
-            // const valdiation = await generator.generate(responsevalidation);
+            const valdiation = await generator.generate(responsevalidation);
 
-            // console.log('valdation',valdiation);
+            console.log('valdation',valdiation);
 
 
             // filteredFileContents.push(fileContent);
