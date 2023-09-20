@@ -28,7 +28,7 @@ async function fetchAndProcessFiles() {
 
     // Define the list of allowed file extensions
     const allowedExtensions = [".js", ".ts", ".py", ".rs", ".cpp", ".cxs", ".hpp"];
-
+    let filteredFileContents = [];
     for (const file of files) {
       // Check if the file has an allowed extension
       const fileExtension = file.filename.slice(file.filename.lastIndexOf("."));
@@ -51,6 +51,8 @@ async function fetchAndProcessFiles() {
             console.log('File:', file.filename);
             console.log('First matching line:', firstMatchingLine);
 
+            filteredFileContents.push({fileContent });
+
             // Log the entire content of the file
             console.log('File Content:', fileContent);
           }
@@ -59,6 +61,7 @@ async function fetchAndProcessFiles() {
         }
       }
     }
+    console.log('Filtered file content: ',filteredFileContents);
   } catch (error) {
     console.error("Error:", error);
     process.exit(1);
