@@ -55,7 +55,8 @@ async function fetchAndProcessFiles() {
             // console.log('First matching line:', firstMatchingLine);
             // Log the entire content of the file
             console.log('File Content:', fileContent);
-            let fileContents = 'Write testcase file for the following code:' + fileContent;
+            let fileContents = 'I want you to act like a code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except of the code. The code is:' + fileContent;
+            console.log('prompt', fileContents);
 
             const response = await generator.generate(fileContents);
             console.log("gpt reply: ", response);
