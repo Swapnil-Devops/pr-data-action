@@ -1,7 +1,7 @@
 import { Octokit } from "@octokit/core";
 import fetch from "node-fetch";
 import fs from "fs";
-
+import core from "@actions/core";
 async function fetchAndProcessFiles() {
   try {
     const octokit = new Octokit({
@@ -62,6 +62,7 @@ async function fetchAndProcessFiles() {
       }
     }
     console.log('Filtered file content: ',filteredFileContents);
+    core.setOutput("matchingFiles",filteredFileContents);
   } catch (error) {
     console.error("Error:", error);
     process.exit(1);
