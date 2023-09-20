@@ -53,15 +53,16 @@ async function fetchAndProcessFiles() {
           if (firstMatchingLine) {
             // console.log('File:', file.filename);
             // console.log('First matching line:', firstMatchingLine);
-            let fileContents = 'Write test cases file for the following code:'+ fileContent; 
+            // Log the entire content of the file
+            console.log('File Content:', fileContent);
+            let fileContents = 'Write testcase file for the following code:' + fileContent;
 
             const response = await generator.generate(fileContents);
-            console.log("gpt reply",response);
+            console.log("gpt reply: ", response);
 
             // filteredFileContents.push(fileContent);
 
-            // Log the entire content of the file
-            console.log('File Content:', fileContent);
+
           }
         } catch (error) {
           console.error("Error fetching or processing file content:", error);
