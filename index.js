@@ -51,7 +51,7 @@ async function fetchAndProcessFiles() {
             console.log('File:', file.filename);
             console.log('First matching line:', firstMatchingLine);
 
-            filteredFileContents.push({fileContent });
+            filteredFileContents.push(fileContent);
 
             // Log the entire content of the file
             console.log('File Content:', fileContent);
