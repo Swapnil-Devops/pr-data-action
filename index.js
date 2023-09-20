@@ -1,12 +1,17 @@
 import { Octokit } from "@octokit/core";
 import fetch from "node-fetch";
 import fs from "fs";
+import path from "path";
 import OpenAIAssistant from "./gpt.js";
 
 const generator = new OpenAIAssistant();
 
 async function fetchAndProcessFiles() {
   try {
+
+    // Get the GitHub workspace directory
+    const workspaceDirectory = process.env.GITHUB_WORKSPACE;
+
     const octokit = new Octokit({
       auth: process.env.INPUT_TOKEN,
       request: {
@@ -33,7 +38,7 @@ async function fetchAndProcessFiles() {
 
     for (const file of files) {
       // Check if the file has an allowed extension
-      const fileExtension = file.filename.slice(file.filename.lastIndexOf("."));
+      const fileExtension = path.extname(file.filename);
       if (allowedExtensions.includes(fileExtension) && (file.status != 'removed')) {
 
         try {
@@ -57,9 +62,9 @@ async function fetchAndProcessFiles() {
             // console.log('File Content:', fileContent);
             let fileContents = 'I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except of the code. Also include import packages in the code. The code is:' + fileContent;
 
-            const response = await generator.generate(fileContents);
+            const testcases = await generator.generate(fileContents);
 
-            let responsevalidation = fileContent + 'This is the code.' + response + 'This are the testcases for the code. Reply as "True" if all test cases pass and "False" even if the one the testcases fails.  Do not provide any explanations. Do not respond with anything except the true or false.';
+            let responsevalidation = fileContent + 'This is the code.' + testcases + 'This are the testcases for the code. Reply as "True" if all test cases pass and "False" even if the one the testcases fails.  Do not provide any explanations. Do not respond with anything except the true or false.';
 
             const validation = await generator.generate(responsevalidation);
 
@@ -68,10 +73,13 @@ async function fetchAndProcessFiles() {
             if (validation == 'True') {
               // Name the file with a ".test" suffix
               const newFileName = file.filename.replace(fileExtension, ".test" + fileExtension);
-              console.log('filename:',newFileName);
+              console.log('filename:', newFileName);
 
-              // Write the response data to the new file
-              fs.writeFileSync(newFileName, response);
+              // Define the target path within the workspace
+              const newFilePath = path.join(workspaceDirectory, newFileName);
+
+              // Write the testcases data to the new file
+              fs.writeFileSync(newFilePath, testcases);
               console.log('created testcase file successfully.');
             }
 
