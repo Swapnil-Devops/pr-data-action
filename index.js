@@ -27,7 +27,7 @@ async function fetchAndProcessFiles() {
     );
 
     const files = response.data;
-    console.log("Fetched files:", files);
+    // console.log("Fetched files:", files);
 
     // Define the list of allowed file extensions
     const allowedExtensions = [".js", ".ts", ".py", ".rs", ".cpp", ".cxs", ".hpp"];
