@@ -28,18 +28,17 @@ class CodeProcessor {
         if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
           try {
             const fileContent = await this.getFileContent(octokit, file.raw_url);
-            console.log('filecontent:', fileContent);
             const testcases = await this.generateTestCases(fileContent);
             console.log('testcases',testcases);
             const validation = await this.generateValidationCode(fileContent, testcases);
 
             console.log('validation', validation);
-            console.log('path',github.context.workspace);
+            console.log('path',github.workspace);
 
             // The following code to write the testcases to a new file if validation is 'True'.
             if (validation === 'True') {
               const newFileName = this.generateTestFileName(file.filename, fileExtension);
-              const filepath = `${github.context.workspace}/${newFileName}`;
+              const filepath = `${github.workspace}/${newFileName}`;
               const fileExists = fs.existsSync(filepath);
               if (fileExists){
                 fs.appendFileSync(filepath, testcases);
