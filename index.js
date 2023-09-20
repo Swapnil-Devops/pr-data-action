@@ -52,9 +52,8 @@ async function fetchAndProcessFiles() {
 
           if (firstMatchingLine) {
             // Log the entire content of the file
-            console.log('File Content:', fileContent);
+            // console.log('File Content:', fileContent);
             let fileContents = 'I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except of the code. Also include import packages in the code. The code is:' + fileContent;
-            console.log('prompt', fileContents);
 
             const response = await generator.generate(fileContents);
             console.log("gpt reply: ", response);
@@ -62,6 +61,7 @@ async function fetchAndProcessFiles() {
 
 
             let responsevalidation = fileContent + 'This is the code.' + response + 'This are the testcases for the code. Reply as true if all test cases pass and false even if the one the testcases fails.  Do not provide any explanations. Do not respond with anything except the true or false.' ;
+            console.log('last prompt :', responsevalidation)
 
             const valdiation = await generator.generate(responsevalidation);
 
