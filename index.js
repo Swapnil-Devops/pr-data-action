@@ -53,8 +53,7 @@ async function fetchAndProcessFiles() {
           if (firstMatchingLine) {
             // console.log('File:', file.filename);
             // console.log('First matching line:', firstMatchingLine);
-            let fileContents = `Write test cases file for the following code:
-            ${fileContent}`; 
+            let fileContents = 'Write test cases file for the following code:'+ fileContent; 
 
             const response = await generator.generate(fileContents);
             console.log("gpt reply",response);
