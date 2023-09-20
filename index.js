@@ -2,7 +2,8 @@ import { Octokit } from "@octokit/core";
 import fetch from "node-fetch";
 import fs from "fs";
 import core from "@actions/core";
-
+import OpenAIAssistant from "./gpt.js";
+const generator = new OpenAIAssistant();
 
 async function fetchAndProcessFiles() {
   try {
@@ -50,10 +51,15 @@ async function fetchAndProcessFiles() {
           });
 
           if (firstMatchingLine) {
-            console.log('File:', file.filename);
-            console.log('First matching line:', firstMatchingLine);
+            // console.log('File:', file.filename);
+            // console.log('First matching line:', firstMatchingLine);
+            let fileContents = `Write test cases file for the following code:
+            ${fileContent}`; 
 
-            filteredFileContents.push(fileContent);
+            const response = await generator.generate(fileContents);
+            console.log("gpt reply",response);
+
+            // filteredFileContents.push(fileContent);
 
             // Log the entire content of the file
             console.log('File Content:', fileContent);
@@ -63,8 +69,8 @@ async function fetchAndProcessFiles() {
         }
       }
     }
-    console.log('Filtered file content: ',filteredFileContents);
-    core.setOutput("matchingFiles",filteredFileContents);
+    // console.log('Filtered file content: ',filteredFileContents);
+    // core.setOutput("matchingFiles",filteredFileContents);
   } catch (error) {
     console.error("Error:", error);
     process.exit(1);
