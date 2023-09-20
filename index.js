@@ -59,18 +59,20 @@ async function fetchAndProcessFiles() {
 
             const response = await generator.generate(fileContents);
 
-            let responsevalidation = fileContent + 'This is the code.' + response + 'This are the testcases for the code. Reply as true if all test cases pass and false even if the one the testcases fails.  Do not provide any explanations. Do not respond with anything except the true or false.';
+            let responsevalidation = fileContent + 'This is the code.' + response + 'This are the testcases for the code. Reply as "True" if all test cases pass and "False" even if the one the testcases fails.  Do not provide any explanations. Do not respond with anything except the true or false.';
 
             const validation = await generator.generate(responsevalidation);
 
             console.log('valdation', validation);
 
-            if (validation == 'true') {
+            if (validation == 'True') {
               // Name the file with a ".test" suffix
               const newFileName = file.filename.replace(fileExtension, ".test" + fileExtension);
+              console.log('filename:',newFileName);
 
               // Write the response data to the new file
               fs.writeFileSync(newFileName, response);
+              console.log('created testcase file successfully.');
             }
 
           }
