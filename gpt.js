@@ -7,7 +7,7 @@ class OpenAIAssistant {
    * @param {string} api_key - OpenAI API key.
    */
   constructor() {
-    this.api_key = core.getInput("API_KEY");
+    this.api_key = core.getInput("api_key");
     this.api_url = "https://api.openai.com/v1/chat/completions";
   }
 
@@ -36,6 +36,7 @@ class OpenAIAssistant {
 
       // Parse the API response as JSON
       const responseData = await response.json();
+      console.log('Response Data: ',responseData);
 
       if (Array.isArray(responseData.choices) && responseData.choices.length > 0) {
         assistantReply = responseData.choices[0].message.content;
