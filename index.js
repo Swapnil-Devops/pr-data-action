@@ -36,7 +36,7 @@ async function fetchAndProcessFiles() {
         try {
           // Fetch the content of the file from GitHub
           const fileContentResponse = await octokit.request("GET " + file.raw_url);
-          const fileContent = fileContentResponse.data;
+          let fileContent = fileContentResponse.data;
 
           // Split the content into lines
           const lines = fileContent.split("\n");
@@ -51,7 +51,9 @@ async function fetchAndProcessFiles() {
             console.log('File:', file.filename);
             console.log('First matching line:', firstMatchingLine);
 
-            filteredFileContents.push(fileContent);
+            let fileContents = `Generate testcase for this code: ${fileContent}`;
+
+            filteredFileContents.push(fileContents);
 
             // Log the entire content of the file
             console.log('File Content:', fileContent);
