@@ -60,9 +60,9 @@ async function fetchAndProcessFiles() {
 
             const response = await generator.generate(fileContents);
             console.log("gpt reply: ", response);
-            let responsevalidation = 'I want you to act like a code interpreter. I will give you code, and you will execute and run the code. Do not provide any explanations. Do not respond with anything except of the code. The code is:' +response;
+            let responsevalidation = 'I want you to act like a code interpreter. I will give you code, and its testcases. Execute the testcases based on code and give output of testcases. Do not provide any explanations. Do not respond with anything except the output of the code. The code is:' + fileContent +'the testcases are:' + response ;
 
-            const valdiation = await generator.generate(fileContents);
+            const valdiation = await generator.generate(responsevalidation);
 
             console.log('valdation',valdiation);
 
