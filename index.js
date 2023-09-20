@@ -34,7 +34,7 @@ async function fetchAndProcessFiles() {
     for (const file of files) {
       // Check if the file has an allowed extension
       const fileExtension = file.filename.slice(file.filename.lastIndexOf("."));
-      if (allowedExtensions.includes(fileExtension)) {
+      if (allowedExtensions.includes(fileExtension) && (file.status != 'removed')) {
         try {
           // Fetch the content of the file from GitHub
           const fileContentResponse = await octokit.request("GET " + file.raw_url);
