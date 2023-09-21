@@ -29,21 +29,33 @@ class CodeProcessor {
         if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
           try {
             const fileContent = await this.getFileContent(octokit, file.raw_url);
-            console.log('filecontent:',fileContent);
-            const testcases = await this.generateTestCases(fileContent, file.filename);
-            console.log('testcases', testcases);
-            const validation = await this.generateValidationCode(fileContent, testcases);
+            console.log('filecontent:', fileContent);
 
-            console.log('validation', validation);
-            // console.log('path',github.workspace);
-            core.setOutput('data', testcases);
+            // Split the content into lines
+            const lines = fileContent.split("\n");
 
-            const fileName = this.generateTestFileName(file.filename, fileExtension);
+            // Find the first non-blank line containing "generate" and "testcase"
+            const firstMatchingLine = lines.find((line) => {
+              const trimmedLine = line.trim();
+              return trimmedLine.length > 0 && trimmedLine.includes("generate") && trimmedLine.includes("testcase");
+            });
 
-            console.log('file name:',fileName);
+            if (firstMatchingLine) {
+              const testcases = await this.generateTestCases(fileContent, file.filename);
+              console.log('testcases', testcases);
+              const validation = await this.generateValidationCode(fileContent, testcases);
 
-            core.setOutput('fileName',fileName);
+              console.log('validation', validation);
+              // console.log('path',github.workspace);
+              core.setOutput('data', testcases);
 
+              const fileName = this.generateTestFileName(file.filename, fileExtension);
+
+              console.log('file name:', fileName);
+
+              core.setOutput('fileName', fileName);
+
+            }
             // const token = process.env.INPUT_TOKEN; // The GitHub token is automatically provided by GitHub Actions
             // const octokits = github.getOctokit(token);
 
@@ -68,7 +80,7 @@ class CodeProcessor {
 
             // console.log(`File '${fileName}' pushed successfully`);
 
-            
+
 
 
 
