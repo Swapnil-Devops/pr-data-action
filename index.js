@@ -69,19 +69,19 @@ class CodeProcessor {
 
 
 
-            if (validation == 'True') {
-              // Name the file with a ".test" suffix
-              const newFileName = file.filename.replace(fileExtension, ".test" + fileExtension);
-              console.log('filename:', newFileName);
-              const workspaceDirectory = process.env.GITHUB_WORKSPACE;
+            // if (validation == 'True') {
+            //   // Name the file with a ".test" suffix
+            //   const newFileName = file.filename.replace(fileExtension, ".test" + fileExtension);
+            //   console.log('filename:', newFileName);
+            //   const workspaceDirectory = process.env.GITHUB_WORKSPACE;
 
-              // Define the target path within the workspace
-              const newFilePath = path.join(workspaceDirectory, newFileName);
+            //   // Define the target path within the workspace
+            //   const newFilePath = path.join(workspaceDirectory, newFileName);
 
-              // Write the testcases data to the new file
-              fs.writeFileSync(newFilePath, testcases);
-              console.log('created testcase file successfully.');
-            }
+            //   // Write the testcases data to the new file
+            //   fs.writeFileSync(newFilePath, testcases);
+            //   console.log('created testcase file successfully.');
+            // }
 
           } catch (error) {
             console.error("Error fetching or processing file content:", error);
@@ -125,7 +125,7 @@ class CodeProcessor {
   }
 
   async generateValidationCode(fileContent, testcases) {
-    const testcasevalidation = fileContent + 'This is the code.' + testcases + 'This are the testcases for the code. Reply as "True" if all test cases pass and "False" even if the one the testcases fails.  Do not provide any explanations. Do not respond with anything except the true or false.';
+    const testcasevalidation = fileContent + 'This is the code.' + testcases + 'These are the testcases for the code. Validate those and return as "True" if testcases are passed and return "False" if any testcase fails. Do not provide any explanations. Do not respond with anything except the true or false.';
     return this.generator.generate(testcasevalidation);
   }
 
