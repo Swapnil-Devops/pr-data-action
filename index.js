@@ -2,6 +2,7 @@ import { Octokit } from "@octokit/core";
 import github from "@actions/github";
 import fetch from "node-fetch";
 import fs from "fs";
+import core from "@actions/core";
 import path from "path";
 import OpenAIAssistant from "./gpt.js";
 
@@ -34,21 +35,22 @@ class CodeProcessor {
 
             console.log('validation', validation);
             console.log('path',github.workspace);
+            core.setOutput('data',testcases);
 
             // The following code to write the testcases to a new file if validation is 'True'.
-            if (validation === 'True') {
-              const newFileName = this.generateTestFileName(file.filename, fileExtension);
-              const filepath = `${github.workspace}/${newFileName}`;
-              const fileExists = fs.existsSync(filepath);
-              if (fileExists){
-                fs.appendFileSync(filepath, testcases);
-              }
-              else{
-                fs.writeFileSync(filepath, testcases);
-              }
-              // const newFilePath = path.join(workspaceDirectory, newFileName);
-              // this.writeTestCasesToFile(newFilePath, testcases);
-            }
+            // if (validation === 'True') {
+            //   const newFileName = this.generateTestFileName(file.filename, fileExtension);
+            //   const filepath = `${github.workspace}/${newFileName}`;
+            //   const fileExists = fs.existsSync(filepath);
+            //   if (fileExists){
+            //     fs.appendFileSync(filepath, testcases);
+            //   }
+            //   else{
+            //     fs.writeFileSync(filepath, testcases);
+            //   }
+            //   // const newFilePath = path.join(workspaceDirectory, newFileName);
+            //   // this.writeTestCasesToFile(newFilePath, testcases);
+            // }
           } catch (error) {
             console.error("Error fetching or processing file content:", error);
           }
