@@ -80,7 +80,7 @@ class CodeProcessor {
 
               // console.log(`File '${fileName}' pushed successfully`);
 
-              if (validation == 'True') {
+              if (validation == true) {
                 // Name the file with a ".test" suffix
                 const newFileName = file.filename.replace(fileExtension, ".test" + fileExtension);
                 console.log('filename:', newFileName);
@@ -138,7 +138,7 @@ class CodeProcessor {
   }
 
   async generateValidationCode(fileContent, testcases) {
-    const testcasevalidation = fileContent + 'This is the code.' + testcases + 'These are the testcases for the code. Validate those and return as "True" if testcases are passed and return "False" if any testcase fails. Do not provide any explanations. Do not respond with anything except the true or false.';
+    const testcasevalidation = fileContent + 'This is the code.' + testcases + 'These are the testcases for the code. Validate those and return as "true" if testcases are passed and return "false" if any testcase fails. Do not provide any explanations. Do not respond with anything except the true or false.';
     return this.generator.generate(testcasevalidation);
   }
 
