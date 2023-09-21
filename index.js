@@ -80,7 +80,8 @@ class CodeProcessor {
 
               // console.log(`File '${fileName}' pushed successfully`);
 
-              if (validation == true) {
+              if (validation == 'true') {
+                console.log("Entered if loop");
                 // Name the file with a ".test" suffix
                 const newFileName = file.filename.replace(fileExtension, ".test" + fileExtension);
                 console.log('filename:', newFileName);
