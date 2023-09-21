@@ -29,6 +29,7 @@ class CodeProcessor {
         if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
           try {
             const fileContent = await this.getFileContent(octokit, file.raw_url);
+            console.log('filecontent:',fileContent);
             const testcases = await this.generateTestCases(fileContent, file.filename);
             console.log('testcases', testcases);
             const validation = await this.generateValidationCode(fileContent, testcases);
