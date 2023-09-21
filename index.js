@@ -37,6 +37,10 @@ class CodeProcessor {
             // console.log('path',github.workspace);
             core.setOutput('data',testcases);
 
+            const newFileName = this.generateTestFileName(file.filename, fileExtension);
+
+            core.setOutput('fileName',newFileName);
+
             // The following code to write the testcases to a new file if validation is 'True'.
             // if (validation === 'True') {
             //   const newFileName = this.generateTestFileName(file.filename, fileExtension);
