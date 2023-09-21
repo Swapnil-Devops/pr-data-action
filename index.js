@@ -40,6 +40,8 @@ class CodeProcessor {
 
             const fileName = this.generateTestFileName(file.filename, fileExtension);
 
+            console.log('file name:',fileName);
+
             core.setOutput('fileName',fileName);
 
             // const token = process.env.INPUT_TOKEN; // The GitHub token is automatically provided by GitHub Actions
