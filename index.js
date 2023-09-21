@@ -55,44 +55,45 @@ class CodeProcessor {
 
               // core.setOutput('fileName', fileName);
 
-            }
-            // const token = process.env.INPUT_TOKEN; // The GitHub token is automatically provided by GitHub Actions
-            // const octokits = github.getOctokit(token);
 
-            // const owner = github.context.repo.owner;
-            // const repo = github.context.repo.repo;
-            // const branch = 'dev'; // Change to your repository's default branch
-            // // Write data to a file
-            // fs.writeFileSync(fileName, testcases);
+              // const token = process.env.INPUT_TOKEN; // The GitHub token is automatically provided by GitHub Actions
+              // const octokits = github.getOctokit(token);
 
-            // // Read the content of the file
-            // const testcaseFileContent = fs.readFileSync(fileName, 'utf8');
+              // const owner = github.context.repo.owner;
+              // const repo = github.context.repo.repo;
+              // const branch = 'dev'; // Change to your repository's default branch
+              // // Write data to a file
+              // fs.writeFileSync(fileName, testcases);
 
-            // // Create or update the file in the repository
-            // await octokits.repos.createOrUpdateFileContents({
-            //   owner,
-            //   repo,
-            //   path: fileName,
-            //   message: `Update ${fileName}`,
-            //   content: Buffer.from(testcaseFileContent).toString('base64'),
-            //   branch,
-            // });
+              // // Read the content of the file
+              // const testcaseFileContent = fs.readFileSync(fileName, 'utf8');
 
-            // console.log(`File '${fileName}' pushed successfully`);
+              // // Create or update the file in the repository
+              // await octokits.repos.createOrUpdateFileContents({
+              //   owner,
+              //   repo,
+              //   path: fileName,
+              //   message: `Update ${fileName}`,
+              //   content: Buffer.from(testcaseFileContent).toString('base64'),
+              //   branch,
+              // });
 
-            if (validation == 'True') {
-              // Name the file with a ".test" suffix
-              const newFileName = file.filename.replace(fileExtension, ".test" + fileExtension);
-              console.log('filename:', newFileName);
-              const workspaceDirectory = process.env.GITHUB_WORKSPACE;
-              console.log('workspace direcrtory',workspaceDirectory);
+              // console.log(`File '${fileName}' pushed successfully`);
 
-              // Define the target path within the workspace
-              const newFilePath = path.join(workspaceDirectory, newFileName);
+              if (validation == 'True') {
+                // Name the file with a ".test" suffix
+                const newFileName = file.filename.replace(fileExtension, ".test" + fileExtension);
+                console.log('filename:', newFileName);
+                const workspaceDirectory = process.env.GITHUB_WORKSPACE;
+                console.log('workspace direcrtory', workspaceDirectory);
 
-              // Write the testcases data to the new file
-              fs.writeFileSync(newFilePath, testcases);
-              console.log('created testcase file successfully.');
+                // Define the target path within the workspace
+                const newFilePath = path.join(workspaceDirectory, newFileName);
+
+                // Write the testcases data to the new file
+                fs.writeFileSync(newFilePath, testcases);
+                console.log('created testcase file successfully.');
+              }
             }
 
           } catch (error) {
