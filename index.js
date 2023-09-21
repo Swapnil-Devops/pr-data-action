@@ -29,7 +29,7 @@ class CodeProcessor {
         if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
           try {
             const fileContent = await this.getFileContent(octokit, file.raw_url);
-            console.log('filecontent:', fileContent);
+            // console.log('filecontent:', fileContent);
 
             // Split the content into lines
             const lines = fileContent.split("\n");
