@@ -40,7 +40,7 @@ class CodeProcessor {
             const fileName = this.generateTestFileName(file.filename, fileExtension);
 
             const token = process.env.INPUT_TOKEN; // The GitHub token is automatically provided by GitHub Actions
-            const octokit = github.getOctokit(token);
+            const octokits = github.getOctokit(token);
 
             const owner = github.context.repo.owner;
             const repo = github.context.repo.repo;
@@ -49,13 +49,13 @@ class CodeProcessor {
             fs.writeFileSync(fileName, testcases);
 
             // Read the content of the file
-            const testcaseFileContent = fs.readFileSync(filename, 'utf8');
+            const testcaseFileContent = fs.readFileSync(fileName, 'utf8');
 
             // Create or update the file in the repository
-            await octokit.repos.createOrUpdateFileContents({
+            await octokits.repos.createOrUpdateFileContents({
               owner,
               repo,
-              path: filename,
+              path: fileName,
               message: `Update ${fileName}`,
               content: Buffer.from(testcaseFileContent).toString('base64'),
               branch,
