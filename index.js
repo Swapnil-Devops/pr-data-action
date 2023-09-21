@@ -29,17 +29,43 @@ class CodeProcessor {
         if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
           try {
             const fileContent = await this.getFileContent(octokit, file.raw_url);
-            const testcases = await this.generateTestCases(fileContent);
-            console.log('testcases',testcases);
+            const testcases = await this.generateTestCases(fileContent, file.filename);
+            console.log('testcases', testcases);
             const validation = await this.generateValidationCode(fileContent, testcases);
 
             console.log('validation', validation);
             // console.log('path',github.workspace);
-            core.setOutput('data',testcases);
+            core.setOutput('data', testcases);
 
-            const newFileName = this.generateTestFileName(file.filename, fileExtension);
+            const fileName = this.generateTestFileName(file.filename, fileExtension);
 
-            core.setOutput('fileName',newFileName);
+            const token = process.env.INPUT_TOKEN; // The GitHub token is automatically provided by GitHub Actions
+            const octokit = github.getOctokit(token);
+
+            const owner = github.context.repo.owner;
+            const repo = github.context.repo.repo;
+            const branch = 'dev'; // Change to your repository's default branch
+            // Write data to a file
+            fs.writeFileSync(fileName, testcases);
+
+            // Read the content of the file
+            const testcaseFileContent = fs.readFileSync(filename, 'utf8');
+
+            // Create or update the file in the repository
+            await octokit.repos.createOrUpdateFileContents({
+              owner,
+              repo,
+              path: filename,
+              message: `Update ${fileName}`,
+              content: Buffer.from(testcaseFileContent).toString('base64'),
+              branch,
+            });
+
+            console.log(`File '${fileName}' pushed successfully`);
+
+            // core.setOutput('fileName',fileName);
+
+
 
             // The following code to write the testcases to a new file if validation is 'True'.
             // if (validation === 'True') {
@@ -91,8 +117,8 @@ class CodeProcessor {
     return fileContentResponse.data;
   }
 
-  async generateTestCases(fileContent) {
-    const fileContents = 'I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except of the code. Also include import packages in the code. The code is:' + fileContent;
+  async generateTestCases(fileContent, filename) {
+    const fileContents = 'I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except of the code. Also include import packages in the code.The name of file which has code is ' + filename + ' The code is:' + fileContent;
     return this.generator.generate(fileContents);
   }
 
