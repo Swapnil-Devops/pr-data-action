@@ -42,7 +42,7 @@ class CodeProcessor {
 
             if (firstMatchingLine) {
               const testcases = await this.generateTestCases(fileContent, file.filename);
-              // console.log('testcases', testcases);
+              console.log('testcases', testcases);
               const validation = await this.generateValidationCode(fileContent, testcases);
 
               console.log('validation', validation);
