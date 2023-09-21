@@ -34,7 +34,7 @@ class CodeProcessor {
             const validation = await this.generateValidationCode(fileContent, testcases);
 
             console.log('validation', validation);
-            console.log('path',github.workspace);
+            // console.log('path',github.workspace);
             core.setOutput('data',testcases);
 
             // The following code to write the testcases to a new file if validation is 'True'.
