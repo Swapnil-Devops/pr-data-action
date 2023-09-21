@@ -42,18 +42,18 @@ class CodeProcessor {
 
             if (firstMatchingLine) {
               const testcases = await this.generateTestCases(fileContent, file.filename);
-              console.log('testcases', testcases);
+              // console.log('testcases', testcases);
               const validation = await this.generateValidationCode(fileContent, testcases);
 
               console.log('validation', validation);
               // console.log('path',github.workspace);
-              core.setOutput('data', testcases);
+              // core.setOutput('data', testcases);
 
-              const fileName = this.generateTestFileName(file.filename, fileExtension);
+              // const fileName = this.generateTestFileName(file.filename, fileExtension);
 
-              console.log('file name:', fileName);
+              // console.log('file name:', fileName);
 
-              core.setOutput('fileName', fileName);
+              // core.setOutput('fileName', fileName);
 
             }
             // const token = process.env.INPUT_TOKEN; // The GitHub token is automatically provided by GitHub Actions
@@ -80,23 +80,20 @@ class CodeProcessor {
 
             // console.log(`File '${fileName}' pushed successfully`);
 
+            if (validation == 'True') {
+              // Name the file with a ".test" suffix
+              const newFileName = file.filename.replace(fileExtension, ".test" + fileExtension);
+              console.log('filename:', newFileName);
+              const workspaceDirectory = process.env.GITHUB_WORKSPACE;
+              console.log('workspace direcrtory',workspaceDirectory);
 
+              // Define the target path within the workspace
+              const newFilePath = path.join(workspaceDirectory, newFileName);
 
-
-
-            // if (validation == 'True') {
-            //   // Name the file with a ".test" suffix
-            //   const newFileName = file.filename.replace(fileExtension, ".test" + fileExtension);
-            //   console.log('filename:', newFileName);
-            //   const workspaceDirectory = process.env.GITHUB_WORKSPACE;
-
-            //   // Define the target path within the workspace
-            //   const newFilePath = path.join(workspaceDirectory, newFileName);
-
-            //   // Write the testcases data to the new file
-            //   fs.writeFileSync(newFilePath, testcases);
-            //   console.log('created testcase file successfully.');
-            // }
+              // Write the testcases data to the new file
+              fs.writeFileSync(newFilePath, testcases);
+              console.log('created testcase file successfully.');
+            }
 
           } catch (error) {
             console.error("Error fetching or processing file content:", error);
