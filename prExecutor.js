@@ -43,22 +43,22 @@ class PullRequestProcessor {
 
                         if (firstMatchingLine) {
                             const testcases = await this.generateTestCases(fileContent, file.filename);
-                            console.log('testcases', testcases);
-                            // const validation = await this.generateValidationCode(fileContent, testcases);
+                            // console.log('testcases', testcases);
+                            const validation = await this.generateValidationCode(fileContent, testcases);
 
-                            // console.log('validation', validation);
+                            console.log('validation', validation);
 
-                            // const workspaceDirectory = process.env.GITHUB_WORKSPACE;
-                            // const newFilePath = path.join(workspaceDirectory, newFileName);
+                            const workspaceDirectory = process.env.GITHUB_WORKSPACE;
+                            const newFilePath = path.join(workspaceDirectory, newFileName);
 
-                            // if (validation == 'true') {
-                            //     // Write the testcases data to the new file
-                            //     fs.writeFileSync(newFilePath, testcases);
-                            //     console.log('created testcase file successfully.');
-                            // }
-                            // else{
-                            //     console.log('failed testcase:');
-                            // }
+                            if (validation == 'true') {
+                                // Write the testcases data to the new file
+                                fs.writeFileSync(newFilePath, testcases);
+                                console.log('created testcase file successfully.');
+                            }
+                            else{
+                                console.log('failed testcase:');
+                            }
                         }
 
                     } catch (error) {
