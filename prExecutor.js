@@ -42,7 +42,6 @@ class PullRequestProcessor {
                         });
 
                         if (firstMatchingLine) {
-                            
                             const testcases = await this.generateTestCases(fileContent, file.filename);
                             // console.log('testcases', testcases);
                             const validation = await this.generateValidationCode(fileContent, testcases);
@@ -99,8 +98,8 @@ class PullRequestProcessor {
     }
 
     async generateTestCases(fileContent, filename) {
-        const testcasegeneration = `I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except the code. Also include import packages in the code. Give me the complete testcase code file. The name of the file which has code is ${filename}. The code is:\n${fileContent}`;
-        return this.generator.generate(testcasegeneration);
+        const fileContents = `I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except the code. Also include import packages in the code. Give me the complete testcase code file. The name of the file which has code is ${filename}. The code is:\n${fileContent}`;
+        return this.generator.generate(fileContents);
     }
 
     async generateValidationCode(fileContent, testcases) {
