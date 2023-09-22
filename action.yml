@@ -17,9 +17,7 @@ inputs:
   api_key:
     description: "OpenAI API Key"
     required: true
-outputs:
-  files:
-    description: "Fetched files from the pull request"
+
 
 runs:
   using: "node16"
