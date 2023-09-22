@@ -29,8 +29,8 @@ class PullRequestProcessor {
                 if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
                     try {
                         const fileContent = await this.getFileContent(octokit, file.raw_url);
-                        // console.log('filecontent:', fileContent);
-                        const newFileName = this.generateTestFileName(file.filename, fileExtension);
+                        console.log('filecontent:', fileContent);
+                        const newFileName = await this.generateTestFileName(file.filename, fileExtension);
 
                         // Split the content into lines
                         const lines = fileContent.split("\n");
@@ -43,7 +43,7 @@ class PullRequestProcessor {
 
                         if (firstMatchingLine) {
                             const testcases = await this.generateTestCases(fileContent, file.filename);
-                            // console.log('testcases', testcases);
+                            console.log('testcases', testcases);
                             const validation = await this.generateValidationCode(fileContent, testcases);
 
                             console.log('validation', validation);
@@ -57,7 +57,7 @@ class PullRequestProcessor {
                                 console.log('created testcase file successfully.');
                             }
                             else{
-                                console.log('failed testcase:', testcases);
+                                console.log('failed testcase:');
                             }
                         }
 
