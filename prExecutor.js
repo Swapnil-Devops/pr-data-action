@@ -56,6 +56,9 @@ class PullRequestProcessor {
                                 fs.writeFileSync(newFilePath, testcases);
                                 console.log('created testcase file successfully.');
                             }
+                            else{
+                                console.log('failed testcase:', testcases);
+                            }
                         }
 
                     } catch (error) {
