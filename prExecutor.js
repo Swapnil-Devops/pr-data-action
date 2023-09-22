@@ -98,7 +98,7 @@ class PullRequestProcessor {
     }
 
     async generateTestCases(fileContent, filename) {
-        const fileContents = `I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except the code. Also include import packages in the code. Give me the complete testcase code file. The name of the file which has code is ${filename}. The code is:\n${fileContent}`;
+        const fileContents = `I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except the code. Also include import packages in the code. Give me the complete testcase code file. Make sure that all testcases gets passed. The name of the file which has code is ${filename}. The code is:\n${fileContent}`;
         // console.log('gpt prompt',fileContents);
         return this.generator.generate(fileContents);
     }
