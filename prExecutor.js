@@ -42,43 +42,24 @@ class PullRequestProcessor {
                         });
 
                         if (firstMatchingLine) {
+                            
+                            const testcases = await this.generateTestCases(fileContent, file.filename);
+                            // console.log('testcases', testcases);
+                            const validation = await this.generateValidationCode(fileContent, testcases);
+
+                            console.log('validation', validation);
+
                             const workspaceDirectory = process.env.GITHUB_WORKSPACE;
                             const newFilePath = path.join(workspaceDirectory, newFileName);
 
-                            let validation = false;
-
-                            while (!validation) {
-                                const testcases = await this.generateTestCases(fileContent, file.filename);
-                                const newValidation = await this.generateValidationCode(fileContent, testcases);
-
-                                console.log('validation', newValidation);
-
-                                if (newValidation === 'true') {
-                                    // Write the testcases data to the new file
-                                    fs.writeFileSync(newFilePath, testcases);
-                                    console.log('created testcase file successfully.');
-                                    validation = true; // Set validation to true to exit the loop
-                                } else {
-                                    console.log('failed testcase:', testcases);
-                                }
+                            if (validation == 'true') {
+                                // Write the testcases data to the new file
+                                fs.writeFileSync(newFilePath, testcases);
+                                console.log('created testcase file successfully.');
                             }
-                            // const testcases = await this.generateTestCases(fileContent, file.filename);
-                            // // console.log('testcases', testcases);
-                            // const validation = await this.generateValidationCode(fileContent, testcases);
-
-                            // console.log('validation', validation);
-
-                            // const workspaceDirectory = process.env.GITHUB_WORKSPACE;
-                            // const newFilePath = path.join(workspaceDirectory, newFileName);
-
-                            // if (validation == 'true') {
-                            //     // Write the testcases data to the new file
-                            //     fs.writeFileSync(newFilePath, testcases);
-                            //     console.log('created testcase file successfully.');
-                            // }
-                            // else{
-                            //     console.log('failed testcase:', testcases);
-                            // }
+                            else{
+                                console.log('failed testcase:', testcases);
+                            }
                         }
 
                     } catch (error) {
@@ -118,7 +99,7 @@ class PullRequestProcessor {
     }
 
     async generateTestCases(fileContent, filename) {
-        const testcasegeneration = `I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except the code. Also include import packages in the code. Give me the complete testcase code file. The name of the file which has code is ${filename}. The code is:\n${fileContent}`;;
+        const testcasegeneration = `I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except the code. Also include import packages in the code. Give me the complete testcase code file. Make sure all the testcases should pass when its given to code interpreter. The name of the file which has code is ${filename}. The code is:\n${fileContent}`;
         return this.generator.generate(testcasegeneration);
     }
 
