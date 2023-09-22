@@ -36,6 +36,7 @@ class OpenAIAssistant {
 
       // Parse the API response as JSON
       const responseData = await response.json();
+      console.log('AI Response',responseData);
 
       if (Array.isArray(responseData.choices) && responseData.choices.length > 0) {
         assistantReply = responseData.choices[0].message.content;
