@@ -42,23 +42,43 @@ class PullRequestProcessor {
                         });
 
                         if (firstMatchingLine) {
-                            const testcases = await this.generateTestCases(fileContent, file.filename);
-                            // console.log('testcases', testcases);
-                            const validation = await this.generateValidationCode(fileContent, testcases);
-
-                            console.log('validation', validation);
-
                             const workspaceDirectory = process.env.GITHUB_WORKSPACE;
                             const newFilePath = path.join(workspaceDirectory, newFileName);
 
-                            if (validation == 'true') {
-                                // Write the testcases data to the new file
-                                fs.writeFileSync(newFilePath, testcases);
-                                console.log('created testcase file successfully.');
+                            let validation = false;
+
+                            while (!validation) {
+                                const testcases = await this.generateTestCases(fileContent, file.filename);
+                                const newValidation = await this.generateValidationCode(fileContent, testcases);
+
+                                console.log('validation', newValidation);
+
+                                if (newValidation === 'true') {
+                                    // Write the testcases data to the new file
+                                    fs.writeFileSync(newFilePath, testcases);
+                                    console.log('created testcase file successfully.');
+                                    validation = true; // Set validation to true to exit the loop
+                                } else {
+                                    console.log('failed testcase:', testcases);
+                                }
                             }
-                            else{
-                                console.log('failed testcase:', testcases);
-                            }
+                            // const testcases = await this.generateTestCases(fileContent, file.filename);
+                            // // console.log('testcases', testcases);
+                            // const validation = await this.generateValidationCode(fileContent, testcases);
+
+                            // console.log('validation', validation);
+
+                            // const workspaceDirectory = process.env.GITHUB_WORKSPACE;
+                            // const newFilePath = path.join(workspaceDirectory, newFileName);
+
+                            // if (validation == 'true') {
+                            //     // Write the testcases data to the new file
+                            //     fs.writeFileSync(newFilePath, testcases);
+                            //     console.log('created testcase file successfully.');
+                            // }
+                            // else{
+                            //     console.log('failed testcase:', testcases);
+                            // }
                         }
 
                     } catch (error) {
