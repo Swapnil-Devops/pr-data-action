@@ -5,6 +5,7 @@ import fs from "fs";
 import core from "@actions/core";
 import path from "path";
 import OpenAIAssistant from "./fullfillmet/gpt.js";
+import { generate_testcase_prompt, validate_testcase_prompt } from "./constant.js";
 
 class PullRequestProcessor {
     constructor() {
@@ -98,12 +99,14 @@ class PullRequestProcessor {
     }
 
     async generateTestCases(fileContent, filename) {
-        const fileContents = `I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except the code. Also include import packages in the code. Give me the complete testcase code file. The name of the file which has code is ${filename}. The code is:\n${fileContent}`;
-        return this.generator.generate(fileContents);
+        const testcasegeneration = generate_testcase_prompt;
+        console.log(testcasegeneration)
+        return this.generator.generate(testcasegeneration);
     }
 
     async generateValidationCode(fileContent, testcases) {
-        const testcasevalidation = `${fileContent} This is the code.\n${testcases} These are the testcases for the code. Validate those and return "true" if testcases are passed and return "false" if any testcase fails. Do not provide any explanations. Do not respond with anything except "true" or "false".`;
+        const testcasevalidation = validate_testcase_prompt;
+        console.log(testcasevalidation);
         return this.generator.generate(testcasevalidation);
     }
 
