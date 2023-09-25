@@ -5,6 +5,7 @@ import fs from "fs";
 import core from "@actions/core";
 import path from "path";
 import OpenAIAssistant from "./fullfillmet/gpt.js";
+import axios from "axios";
 
 class PullRequestProcessor {
     constructor() {
@@ -120,15 +121,26 @@ class PullRequestProcessor {
     //     return fileContentResponse.data;
     // }
     async getFileContent(octokit, rawUrl) {
+        const accesstoken = core.getInput('PAT');
         try {
             console.log('Fetching file from URL:', rawUrl);
-            const fileContentResponse = await octokit.request("GET " + rawUrl);
-            console.log('File content response:', fileContentResponse);
-            return fileContentResponse.data;
-        } catch (error) {
+        
+            // Convert the raw GitHub URL to an API URL
+            const apiURL = rawUrl.replace("https://github.com/", "https://api.github.com/repos/");
+        
+            // Make a GET request to the API URL to fetch the file content
+            const response = await axios.get(apiURL, {
+              headers: {
+                Authorization: `token ${accesstoken}`,
+              },
+            });
+        
+            console.log('File content response:', response.data);
+            return response.data;
+          } catch (error) {
             console.error("Error fetching file content:", error);
             throw error;
-        }
+          }
     }    
 
     async generateTestCases(fileContent, filename) {
