@@ -107,8 +107,7 @@ class PullRequestProcessor {
         //     console.error("Error fetching the file:", error.message);
         // }
 
-        // const githubRawUrl = rawUrl.replace('https://github.com/','https://raw.githubusercontent.com/')
-        // console.log('new url',githubRawUrl);
+        console.log('url:',rawUrl);
         const accesstoken = core.getInput('PAT');
 
         const headers = {
