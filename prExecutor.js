@@ -88,7 +88,7 @@ class PullRequestProcessor {
     }
 
     async getFileContent(octokit, rawUrl) {
-        githubRawUrl = rawUrl.replace('https://github.com/','https://raw.githubusercontent.com/')
+        const githubRawUrl = rawUrl.replace('https://github.com/','https://raw.githubusercontent.com/')
         console.log('new url',githubRawUrl);
         const accesstoken = core.getInput('PAT');
 
