@@ -22,14 +22,17 @@ class PullRequestProcessor {
             });
 
             const files = await this.getPullRequestFiles(octokit);
+            console.log('Files from pull request:',files);
 
 
             for (const file of files) {
                 const fileExtension = path.extname(file.filename);
+                console.log('file extension',fileExtension);
                 if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
+                    console.log("Inside 1st if block ");
                     try {
                         const fileContent = await this.getFileContent(octokit, file.raw_url);
-                        // console.log('filecontent:', fileContent);
+                        console.log('filecontent:', fileContent);
                         const newFileName = await this.generateTestFileName(file.filename, fileExtension);
 
                         // Split the content into lines
