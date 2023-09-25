@@ -31,7 +31,7 @@ class PullRequestProcessor {
                 if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
                     try {
                         console.log("Raw URL of file:",file.raw_url);
-                        const fileContent = await this.getFileContent(octokit, file.raw_url);
+                        const fileContent = await this.getFileContent(accessToken, file.raw_url);
                         console.log('filecontent:', fileContent);
                         const newFileName = await this.generateTestFileName(file.filename, fileExtension);
 
@@ -95,18 +95,25 @@ class PullRequestProcessor {
         return allowedExtensions.includes(fileExtension);
     }
 
-    async getFileContent(octokit, rawUrl) {
+    async getFileContent(accessToken, rawUrl) {
         try {
-            const response = await fetch(rawUrl);
+            const response = await fetch(rawUrl, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+     
             if (!response.ok) {
                 throw new Error(`Failed to fetch file content: ${response.statusText}`);
             }
+     
             const fileContent = await response.text();
             return fileContent;
         } catch (error) {
             console.error("Error fetching file content:", error);
-            throw error; // Rethrow the error to handle it at a higher level
+            throw error;
         }
+     
         // const fileContentResponse = await octokit.request("GET " + rawUrl);
         // console.log('file content resposnse',fileContentResponse);
         // return fileContentResponse.data;
