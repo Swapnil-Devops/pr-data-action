@@ -87,62 +87,70 @@ class PullRequestProcessor {
         return allowedExtensions.includes(fileExtension);
     }
 
+    // async getFileContent(octokit, rawUrl) {
+    //     const accesstoken = core.getInput('PAT');
+    //     let githubRawUrl = rawUrl.replace('https://github.com/','https://raw.githubusercontent.com/').replace('/raw/','/')
+    //     githubRawUrl = githubRawUrl +'?token='+accesstoken
+    //     console.log('new url',githubRawUrl);
+
+
+    //     const headers = {
+    //         "Authorization": `token ${accesstoken}`
+    //       };
+
+    //       fetch(githubRawUrl, { headers })
+    //         .then(response => {
+    //           if (!response.ok) {
+    //             throw new Error(`HTTP error! Status: ${response.status}`);
+    //           }
+    //           return response.text();
+    //         })
+    //         .then(data => {
+    //           // `data` contains the content of the file
+    //           console.log('data:',data);
+    //           return data
+    //         })
+    //         .catch(error => {
+    //           console.error("Error fetching the file:", error);
+    //         });
+
+    //     // try {
+    //     //     const fileContentResponse = await octokit.request("GET " + rawUrl, {
+    //     //         headers: {
+    //     //             Authorization: `token ${accesstoken}`,
+    //     //         },
+    //     //     });
+    //     //     return fileContentResponse.data;
+    //     // } catch (error) {
+    //     //     console.error("Error fetching file content:", error);
+    //     //     throw error;
+    //     // }
+    // }
+
     async getFileContent(octokit, rawUrl) {
-
-
-        // try {
-        //     const response = await octokit.repos.getContent({
-        //         owner: process.env.INPUT_OWNER,
-        //         repo: process.env.INPUT_REPO,
-        //         path: ,
-        //     });
-
-        //     if (response.status === 200) {
-        //         const content = Buffer.from(response.data.content, 'base64').toString();
-        //         console.log(content);
-        //     } else {
-        //         console.error("Error fetching the file:", response.status);
-        //     }
-        // } catch (error) {
-        //     console.error("Error fetching the file:", error.message);
-        // }
         const accesstoken = core.getInput('PAT');
-        let githubRawUrl = rawUrl.replace('https://github.com/','https://raw.githubusercontent.com/').replace('/raw/','/')
-        githubRawUrl = githubRawUrl +'?token='+accesstoken
-        console.log('new url',githubRawUrl);
-        
+        let githubRawUrl = rawUrl.replace('https://github.com/', 'https://raw.githubusercontent.com/').replace('/raw/', '/');
+        githubRawUrl = githubRawUrl + '?token=' + accesstoken;
+        console.log('new url', githubRawUrl);
 
         const headers = {
             "Authorization": `token ${accesstoken}`
-          };
+        };
 
-          fetch(githubRawUrl, { headers })
-            .then(response => {
-              if (!response.ok) {
+        try {
+            const response = await fetch(githubRawUrl, { headers });
+
+            if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
-              }
-              return response.text();
-            })
-            .then(data => {
-              // `data` contains the content of the file
-              console.log('data:',data);
-              return data
-            })
-            .catch(error => {
-              console.error("Error fetching the file:", error);
-            });
+            }
 
-        // try {
-        //     const fileContentResponse = await octokit.request("GET " + rawUrl, {
-        //         headers: {
-        //             Authorization: `token ${accesstoken}`,
-        //         },
-        //     });
-        //     return fileContentResponse.data;
-        // } catch (error) {
-        //     console.error("Error fetching file content:", error);
-        //     throw error;
-        // }
+            const data = await response.text();
+            console.log('data:', data);
+            return data; // Return the data
+        } catch (error) {
+            console.error("Error fetching the file:", error);
+            throw error; // Rethrow the error
+        }
     }
 
 
