@@ -92,9 +92,9 @@ class PullRequestProcessor {
         console.log('new url',githubRawUrl);
         const accesstoken = core.getInput('PAT');
 
-        const headers = new Headers({
+        const headers = {
             "Authorization": `token ${accesstoken}`
-          });
+          };
           
           fetch(githubRawUrl, { headers })
             .then(response => {
