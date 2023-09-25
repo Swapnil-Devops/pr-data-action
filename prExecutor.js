@@ -107,7 +107,7 @@ class PullRequestProcessor {
         //     console.error("Error fetching the file:", error.message);
         // }
         const accesstoken = core.getInput('PAT');
-        const githubRawUrl = rawUrl.replace('https://github.com/','https://raw.githubusercontent.com/').replace('/raw/','/')
+        let githubRawUrl = rawUrl.replace('https://github.com/','https://raw.githubusercontent.com/').replace('/raw/','/')
         githubRawUrl = githubRawUrl +'?token='+accesstoken
         console.log('new url',githubRawUrl);
         
