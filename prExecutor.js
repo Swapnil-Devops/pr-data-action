@@ -145,8 +145,7 @@ class PullRequestProcessor {
             }
 
             const data = await response.text();
-            console.log('data:', data);
-            return data; // Return the data
+            return data; 
         } catch (error) {
             console.error("Error fetching the file:", error);
             throw error; // Rethrow the error
