@@ -11,7 +11,7 @@ inputs:
   pull_number:
     description: "Pull request number"
     required: true
-  token:
+  PAT:
     description: "GitHub authentication token"
     required: true
   api_key:

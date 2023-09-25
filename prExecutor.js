@@ -14,12 +14,14 @@ class PullRequestProcessor {
     async processFiles() {
         try {
             // const workspaceDirectory = process.env.GITHUB_WORKSPACE;
-            const octokit = new Octokit({
-                auth: process.env.INPUT_TOKEN,
-                request: {
-                    fetch,
-                },
-            });
+            // const octokit = new Octokit({
+            //     auth: process.env.INPUT_TOKEN,
+            //     request: {
+            //         fetch,
+            //     },
+            // });
+            const accessToken = core.getInput('PAT');
+            const octokit = new Octokit({ auth: `token ${accessToken}`, request: { fetch } });
 
             const files = await this.getPullRequestFiles(octokit);
 
