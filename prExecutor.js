@@ -23,7 +23,7 @@ class PullRequestProcessor {
                 const fileExtension = path.extname(file.filename);
                 if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
                     try {
-                        const fileContent = await this.getFileContent( octokit, file.raw_url);
+                        const fileContent = await this.getFileContent(octokit, file.raw_url);
                         const newFileName = await this.generateTestFileName(file.filename, fileExtension);
 
                         // Split the content into lines
@@ -50,8 +50,8 @@ class PullRequestProcessor {
                                 fs.writeFileSync(newFilePath, testcases);
                                 console.log('created testcase file successfully.');
                             }
-                            else{
-                                console.log('failed testcase:',testcases);
+                            else {
+                                console.log('failed testcase:', testcases);
                             }
                         }
 
@@ -87,15 +87,45 @@ class PullRequestProcessor {
     }
 
     async getFileContent(octokit, rawUrl) {
-        try {
-            const fileContentResponse = await octokit.request("GET " + rawUrl);
-            return fileContentResponse.data;
-        } catch (error) {
-            console.error("Error fetching file content:", error);
-            throw error;
+
+
+        // Parse the raw URL to extract owner, repo, and file path
+        const urlParts = new URL(rawUrl);
+        const pathParts = urlParts.pathname.split('/');
+
+        if (pathParts.length >= 4) {
+            const owner = pathParts[1];
+            const repo = pathParts[2];
+            const filePath = pathParts.slice(4).join('/'); // Join the parts after "/raw/..."
+
+            // Get the raw content of the file
+            octokit.repos
+                .getContents({
+                    owner,
+                    repo,
+                    path: filePath,
+                })
+                .then((response) => {
+                    const content = Buffer.from(response.data.content, 'base64').toString();
+                    console.log(content);
+                    return (content);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        } else {
+            console.error('Invalid GitHub raw URL format');
         }
+
+        // try {
+        //     const fileContentResponse = await octokit.request("GET " + rawUrl);
+        //     return fileContentResponse.data;
+        // } catch (error) {
+        //     console.error("Error fetching file content:", error);
+        //     throw error;
+        // }
     }
-    
+
 
     async generateTestCases(fileContent, filename) {
         const fileContents = `I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except the code. Also include import packages in the code. Give me the complete testcase code file. Make sure that all testcases gets passed. The name of the file which has code is ${filename}. The code is:\n${fileContent}`;
