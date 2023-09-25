@@ -14,27 +14,16 @@ class PullRequestProcessor {
 
     async processFiles() {
         try {
-            // const workspaceDirectory = process.env.GITHUB_WORKSPACE;
-            // const octokit = new Octokit({
-            //     auth: process.env.INPUT_TOKEN,
-            //     request: {
-            //         fetch,
-            //     },
-            // });
             const accessToken = core.getInput('PAT');
             const octokit = new Octokit({ auth: `token ${accessToken}`, request: { fetch } });
 
             const files = await this.getPullRequestFiles(octokit);
-            console.log("FIles of pr",files);
-
 
             for (const file of files) {
                 const fileExtension = path.extname(file.filename);
                 if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
                     try {
-                        console.log("Raw URL of file:",file.raw_url);
                         const fileContent = await this.getFileContent( octokit, file.raw_url);
-                        console.log('filecontent:', fileContent);
                         const newFileName = await this.generateTestFileName(file.filename, fileExtension);
 
                         // Split the content into lines
@@ -99,7 +88,6 @@ class PullRequestProcessor {
 
     async getFileContent( octokit, rawUrl) {     
         const fileContentResponse = await octokit.request("GET " + rawUrl);
-        console.log('file content resposnse',fileContentResponse);
         return fileContentResponse.data;
     }
 
