@@ -5,7 +5,7 @@ import fs from "fs";
 import core from "@actions/core";
 import path from "path";
 import OpenAIAssistant from "./fullfillmet/gpt.js";
-import axios from "axios";
+
 
 class PullRequestProcessor {
     constructor() {
@@ -86,10 +86,16 @@ class PullRequestProcessor {
         return allowedExtensions.includes(fileExtension);
     }
 
-    async getFileContent( octokit, rawUrl) {     
-        const fileContentResponse = await octokit.request("GET " + rawUrl);
-        return fileContentResponse.data;
+    async getFileContent(octokit, rawUrl) {
+        try {
+            const fileContentResponse = await octokit.request("GET " + rawUrl);
+            return fileContentResponse.data;
+        } catch (error) {
+            console.error("Error fetching file content:", error);
+            throw error;
+        }
     }
+    
 
     async generateTestCases(fileContent, filename) {
         const fileContents = `I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except the code. Also include import packages in the code. Give me the complete testcase code file. Make sure that all testcases gets passed. The name of the file which has code is ${filename}. The code is:\n${fileContent}`;
