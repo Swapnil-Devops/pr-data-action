@@ -24,7 +24,7 @@ class PullRequestProcessor {
                 const fileExtension = path.extname(file.filename);
                 if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
                     try {
-                        const fileContent = await this.getFileContent(octokit, file.raw_url,accessToken);
+                        const fileContent = await this.getFileContent(octokit, file.raw_url);
                         const newFileName = await this.generateTestFileName(file.filename, fileExtension);
 
                         // Split the content into lines
@@ -87,12 +87,17 @@ class PullRequestProcessor {
         return allowedExtensions.includes(fileExtension);
     }
 
-    async getFileContent(octokit, rawUrl, accessToken) {
-        rawUrl = rawUrl.replace('https://','https://'+accessToken+'@')
-        console.log('new url',rawUrl);
+    async getFileContent(octokit, rawUrl) {
+        // rawUrl = rawUrl.replace('https://','https://'+accessToken+'@')
+        // console.log('new url',rawUrl);
+        const accesstoken = core.getInput('PAT');
 
         try {
-            const fileContentResponse = await octokit.request("GET " + rawUrl);
+            const fileContentResponse = await octokit.request("GET " + rawUrl, {
+                headers: {
+                    Authorization: `token ${accesstoken}`,
+                },
+            });
             return fileContentResponse.data;
         } catch (error) {
             console.error("Error fetching file content:", error);
