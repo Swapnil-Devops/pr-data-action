@@ -31,7 +31,7 @@ class PullRequestProcessor {
                 if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
                     try {
                         console.log("Raw URL of file:",file.raw_url);
-                        const fileContent = await this.getFileContent(accessToken, file.raw_url);
+                        const fileContent = await this.getFileContent( file.raw_url);
                         console.log('filecontent:', fileContent);
                         const newFileName = await this.generateTestFileName(file.filename, fileExtension);
 
@@ -95,12 +95,12 @@ class PullRequestProcessor {
         return allowedExtensions.includes(fileExtension);
     }
 
-    async getFileContent(accessToken, rawUrl) {
-        console.log("url",rawUrl);
+    async getFileContent( rawUrl) {
+        const accesstoken = core.getInput('PAT');
         try {
             const response = await fetch(rawUrl, {
                 headers: {
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${accesstoken}`,
                 },
             });
      
