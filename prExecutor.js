@@ -111,7 +111,7 @@ class PullRequestProcessor {
         const accesstoken = core.getInput('PAT');
 
         const headers = {
-            "Authorization": `token ${accesstoken}`
+            "Authorization": `Bearer ${accesstoken}`
           };
 
           fetch(rawUrl, { headers })
