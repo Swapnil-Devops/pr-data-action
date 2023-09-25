@@ -31,7 +31,7 @@ class PullRequestProcessor {
                 if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
                     try {
                         console.log("Raw URL of file:",file.raw_url);
-                        const fileContent = await this.getFileContent( file.raw_url);
+                        const fileContent = await this.getFileContent( octokit, file.raw_url);
                         console.log('filecontent:', fileContent);
                         const newFileName = await this.generateTestFileName(file.filename, fileExtension);
 
@@ -95,30 +95,41 @@ class PullRequestProcessor {
         return allowedExtensions.includes(fileExtension);
     }
 
-    async getFileContent( rawUrl) {
-        const accesstoken = core.getInput('PAT');
+    // async getFileContent( octokit, rawUrl) {
+    //     // const accesstoken = core.getInput('PAT');
+    //     // try {
+    //     //     const response = await fetch(rawUrl, {
+    //     //         headers: {
+    //     //             Authorization: `Bearer ${accesstoken}`,
+    //     //         },
+    //     //     });
+     
+    //     //     if (!response.ok) {
+    //     //         throw new Error(`Failed to fetch file content: ${response.statusText}`);
+    //     //     }
+     
+    //     //     const fileContent = await response.text();
+    //     //     return fileContent;
+    //     // } catch (error) {
+    //     //     console.error("Error fetching file content:", error);
+    //     //     throw error;
+    //     // }
+     
+    //     const fileContentResponse = await octokit.request("GET " + rawUrl);
+    //     console.log('file content resposnse',fileContentResponse);
+    //     return fileContentResponse.data;
+    // }
+    async getFileContent(octokit, rawUrl) {
         try {
-            const response = await fetch(rawUrl, {
-                headers: {
-                    Authorization: `Bearer ${accesstoken}`,
-                },
-            });
-     
-            if (!response.ok) {
-                throw new Error(`Failed to fetch file content: ${response.statusText}`);
-            }
-     
-            const fileContent = await response.text();
-            return fileContent;
+            console.log('Fetching file from URL:', rawUrl);
+            const fileContentResponse = await octokit.request("GET " + rawUrl);
+            console.log('File content response:', fileContentResponse);
+            return fileContentResponse.data;
         } catch (error) {
             console.error("Error fetching file content:", error);
             throw error;
         }
-     
-        // const fileContentResponse = await octokit.request("GET " + rawUrl);
-        // console.log('file content resposnse',fileContentResponse);
-        // return fileContentResponse.data;
-    }
+    }    
 
     async generateTestCases(fileContent, filename) {
         const fileContents = `I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except the code. Also include import packages in the code. Give me the complete testcase code file. Make sure that all testcases gets passed. The name of the file which has code is ${filename}. The code is:\n${fileContent}`;
