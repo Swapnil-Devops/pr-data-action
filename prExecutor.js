@@ -96,6 +96,7 @@ class PullRequestProcessor {
     }
 
     async getFileContent(accessToken, rawUrl) {
+        console.log("url",rawUrl);
         try {
             const response = await fetch(rawUrl, {
                 headers: {
