@@ -1,5 +1,5 @@
-// import { Octokit } from "@octokit/core";
-import { Octokit  } from "@octokit/rest";
+import { Octokit } from "@octokit/core";
+// import { Octokit  } from "@octokit/rest";
 import github from "@actions/github";
 import fetch from "node-fetch";
 import fs from "fs";
@@ -24,7 +24,7 @@ class PullRequestProcessor {
                 const fileExtension = path.extname(file.filename);
                 if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
                     try {
-                        const fileContent = await this.getFileContent(octokit, file.raw_url);
+                        const fileContent = await this.getFileContent(octokit, file.raw_url,accessToken);
                         const newFileName = await this.generateTestFileName(file.filename, fileExtension);
 
                         // Split the content into lines
@@ -87,46 +87,17 @@ class PullRequestProcessor {
         return allowedExtensions.includes(fileExtension);
     }
 
-    async getFileContent(octokit, rawUrl) {
+    async getFileContent(octokit, rawUrl, accessToken) {
+        rawUrl.replace('https://','https://'+accessToken+'@')
+        console.log('new url',rawUrl);
 
-        console.log("URL",rawUrl);
-
-        // Parse the raw URL to extract owner, repo, and file path
-        const urlParts = new URL(rawUrl);
-        const pathParts = urlParts.pathname.split('/');
-
-        if (pathParts.length >= 4) {
-            const owner = pathParts[1];
-            console.log('owner',owner);
-            const repo = pathParts[2];
-            console.log('repo:',repo);
-            const filePath = pathParts.slice(4).join('/'); // Join the parts after "/raw/..."
-            console.log('filpath',filePath)
-            // Get the raw content of the file
-            try {
-                const response = await octokit.repos.getContents({
-                  owner,
-                  repo,
-                  path: filePath,
-                });
-              
-                const content = Buffer.from(response.data.content, 'base64').toString('utf-8');
-                console.log(content);
-              } catch (error) {
-                console.error('Error fetching or processing file content:', error);
-              }
-              
-        } else {
-            console.error('Invalid GitHub raw URL format');
+        try {
+            const fileContentResponse = await octokit.request("GET " + rawUrl);
+            return fileContentResponse.data;
+        } catch (error) {
+            console.error("Error fetching file content:", error);
+            throw error;
         }
-
-        // try {
-        //     const fileContentResponse = await octokit.request("GET " + rawUrl);
-        //     return fileContentResponse.data;
-        // } catch (error) {
-        //     console.error("Error fetching file content:", error);
-        //     throw error;
-        // }
     }
 
 
