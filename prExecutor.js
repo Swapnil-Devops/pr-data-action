@@ -25,6 +25,7 @@ class PullRequestProcessor {
             const octokit = new Octokit({ auth: `token ${accessToken}`, request: { fetch } });
 
             const files = await this.getPullRequestFiles(octokit);
+            console.log("FIles of pr",files);
 
 
             for (const file of files) {
