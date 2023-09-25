@@ -1,4 +1,5 @@
-import { Octokit } from "@octokit/core";
+// import { Octokit } from "@octokit/core";
+import { Octokit  } from "@octokit/rest";
 import github from "@actions/github";
 import fetch from "node-fetch";
 import fs from "fs";
