@@ -103,20 +103,19 @@ class PullRequestProcessor {
             const filePath = pathParts.slice(4).join('/'); // Join the parts after "/raw/..."
             console.log('filpath',filePath)
             // Get the raw content of the file
-            octokit.repos
-                .getContents({
-                    owner,
-                    repo,
-                    path: filePath,
-                })
-                .then((response) => {
-                    const content = Buffer.from(response.data.content, 'base64').toString();
-                    console.log(content);
-                    return (content);
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
+            try {
+                const response = await octokit.repos.getContents({
+                  owner,
+                  repo,
+                  path: filePath,
                 });
+              
+                const content = Buffer.from(response.data.content, 'base64').toString('utf-8');
+                console.log(content);
+              } catch (error) {
+                console.error('Error fetching or processing file content:', error);
+              }
+              
         } else {
             console.error('Invalid GitHub raw URL format');
         }
