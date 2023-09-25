@@ -96,9 +96,20 @@ class PullRequestProcessor {
     }
 
     async getFileContent(octokit, rawUrl) {
-        const fileContentResponse = await octokit.request("GET " + rawUrl);
-        console.log('file content resposnse',fileContentResponse);
-        return fileContentResponse.data;
+        try {
+            const response = await fetch(rawUrl);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch file content: ${response.statusText}`);
+            }
+            const fileContent = await response.text();
+            return fileContent;
+        } catch (error) {
+            console.error("Error fetching file content:", error);
+            throw error; // Rethrow the error to handle it at a higher level
+        }
+        // const fileContentResponse = await octokit.request("GET " + rawUrl);
+        // console.log('file content resposnse',fileContentResponse);
+        // return fileContentResponse.data;
     }
 
     async generateTestCases(fileContent, filename) {
