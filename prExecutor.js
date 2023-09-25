@@ -89,6 +89,7 @@ class PullRequestProcessor {
 
     async getFileContent(octokit, rawUrl) {
 
+        console.log("URL",rawUrl);
 
         // Parse the raw URL to extract owner, repo, and file path
         const urlParts = new URL(rawUrl);
@@ -96,9 +97,11 @@ class PullRequestProcessor {
 
         if (pathParts.length >= 4) {
             const owner = pathParts[1];
+            console.log('owner',owner);
             const repo = pathParts[2];
+            console.log('repo:',repo);
             const filePath = pathParts.slice(4).join('/'); // Join the parts after "/raw/..."
-
+            console.log('filpath',filePath)
             // Get the raw content of the file
             octokit.repos
                 .getContents({
