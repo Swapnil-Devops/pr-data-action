@@ -106,15 +106,17 @@ class PullRequestProcessor {
         // } catch (error) {
         //     console.error("Error fetching the file:", error.message);
         // }
-
-        console.log('url:',rawUrl);
         const accesstoken = core.getInput('PAT');
+        const githubRawUrl = rawUrl.replace('https://github.com/','https://raw.githubusercontent.com/').replace('/raw/','/')
+        githubRawUrl = githubRawUrl +'?token='+accesstoken
+        console.log('new url',githubRawUrl);
+        
 
         const headers = {
-            "Authorization": `Bearer ${accesstoken}`
+            "Authorization": `token ${accesstoken}`
           };
 
-          fetch(rawUrl, { headers })
+          fetch(githubRawUrl, { headers })
             .then(response => {
               if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
