@@ -96,52 +96,11 @@ class PullRequestProcessor {
         return allowedExtensions.includes(fileExtension);
     }
 
-    // async getFileContent( octokit, rawUrl) {
-    //     // const accesstoken = core.getInput('PAT');
-    //     // try {
-    //     //     const response = await fetch(rawUrl, {
-    //     //         headers: {
-    //     //             Authorization: `Bearer ${accesstoken}`,
-    //     //         },
-    //     //     });
-     
-    //     //     if (!response.ok) {
-    //     //         throw new Error(`Failed to fetch file content: ${response.statusText}`);
-    //     //     }
-     
-    //     //     const fileContent = await response.text();
-    //     //     return fileContent;
-    //     // } catch (error) {
-    //     //     console.error("Error fetching file content:", error);
-    //     //     throw error;
-    //     // }
-     
-    //     const fileContentResponse = await octokit.request("GET " + rawUrl);
-    //     console.log('file content resposnse',fileContentResponse);
-    //     return fileContentResponse.data;
-    // }
-    async getFileContent(octokit, rawUrl) {
-        const accesstoken = core.getInput('PAT');
-        try {
-            console.log('Fetching file from URL:', rawUrl);
-        
-            // Convert the raw GitHub URL to an API URL
-            const apiURL = rawUrl.replace("https://github.com/", "https://api.github.com/repos/");
-        
-            // Make a GET request to the API URL to fetch the file content
-            const response = await axios.get(apiURL, {
-              headers: {
-                Authorization: `token ${accesstoken}`,
-              },
-            });
-        
-            console.log('File content response:', response.data);
-            return response.data;
-          } catch (error) {
-            console.error("Error fetching file content:", error);
-            throw error;
-          }
-    }    
+    async getFileContent( octokit, rawUrl) {     
+        const fileContentResponse = await octokit.request("GET " + rawUrl);
+        console.log('file content resposnse',fileContentResponse);
+        return fileContentResponse.data;
+    }
 
     async generateTestCases(fileContent, filename) {
         const fileContents = `I want you to act like a senior testcase code developer. I will give you code, and you will write the testcases. Do not provide any explanations. Do not respond with anything except the code. Also include import packages in the code. Give me the complete testcase code file. Make sure that all testcases gets passed. The name of the file which has code is ${filename}. The code is:\n${fileContent}`;
