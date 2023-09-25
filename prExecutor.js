@@ -88,7 +88,7 @@ class PullRequestProcessor {
     }
 
     async getFileContent(octokit, rawUrl, accessToken) {
-        rawUrl.replace('https://','https://'+accessToken+'@')
+        rawUrl = rawUrl.replace('https://','https://'+accessToken+'@')
         console.log('new url',rawUrl);
 
         try {
