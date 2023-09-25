@@ -88,21 +88,40 @@ class PullRequestProcessor {
     }
 
     async getFileContent(octokit, rawUrl) {
-        // rawUrl = rawUrl.replace('https://','https://'+accessToken+'@')
-        // console.log('new url',rawUrl);
+        githubRawUrl = rawUrl.replace('https://github.com/','https://raw.githubusercontent.com/')
+        console.log('new url',githubRawUrl);
         const accesstoken = core.getInput('PAT');
 
-        try {
-            const fileContentResponse = await octokit.request("GET " + rawUrl, {
-                headers: {
-                    Authorization: `token ${accesstoken}`,
-                },
+        const headers = new Headers({
+            "Authorization": `token ${accesstoken}`
+          });
+          
+          fetch(githubRawUrl, { headers })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+              }
+              return response.text();
+            })
+            .then(data => {
+              // `data` contains the content of the file
+              console.log(data);
+            })
+            .catch(error => {
+              console.error("Error fetching the file:", error);
             });
-            return fileContentResponse.data;
-        } catch (error) {
-            console.error("Error fetching file content:", error);
-            throw error;
-        }
+
+        // try {
+        //     const fileContentResponse = await octokit.request("GET " + rawUrl, {
+        //         headers: {
+        //             Authorization: `token ${accesstoken}`,
+        //         },
+        //     });
+        //     return fileContentResponse.data;
+        // } catch (error) {
+        //     console.error("Error fetching file content:", error);
+        //     throw error;
+        // }
     }
 
 
