@@ -1,11 +1,13 @@
 import { Octokit } from "@octokit/core";
-import github from "@actions/github";
-import fetch from "node-fetch";
-import fs from "fs";
-import core from "@actions/core";
-import path from "path";
-import OpenAIAssistant from "./fullfillmet/gpt.ts";
-import { generateTestcasePrompt, validateTestcasePrompt } from "./constant.ts";
+// import fetch from "node-fetch";
+const fetch = require("node-fetch");
+const fs = require("fs");
+const core = require("@actions/core");
+// import core from "@actions/core";
+// import path from "path";
+const path = require("path");
+import OpenAIAssistant from "./fullfillmet/gpt";
+import { generateTestcasePrompt, validateTestcasePrompt } from "./constant";
 
 interface PullRequestFile 
 {
