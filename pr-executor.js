@@ -37,13 +37,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@octokit/core");
-// import fetch from "node-fetch";
-var fetch = require("node-fetch");
-var fs = require("fs");
-var core = require("@actions/core");
-// import core from "@actions/core";
-// import path from "path";
-var path = require("path");
+var node_fetch_1 = require("node-fetch");
+// const fetch = require("node-fetch");
+// const fs = require("fs");
+var fs_1 = require("fs");
+// const core = require("@actions/core");
+var core_2 = require("@actions/core");
+var path_1 = require("path");
+// const path = require("path");
 var gpt_1 = require("./fullfillmet/gpt");
 var constant_1 = require("./constant");
 var PullRequestProcessor = /** @class */ (function () {
@@ -57,8 +58,8 @@ var PullRequestProcessor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 12, , 13]);
-                        accessToken = core.getInput('PAT');
-                        octokit = new core_1.Octokit({ auth: "token ".concat(accessToken), request: { fetch: fetch } });
+                        accessToken = core_2.default.getInput('PAT');
+                        octokit = new core_1.Octokit({ auth: "token ".concat(accessToken), request: { fetch: node_fetch_1.default } });
                         return [4 /*yield*/, this.getPullRequestFiles(octokit)];
                     case 1:
                         files = _a.sent();
@@ -67,7 +68,7 @@ var PullRequestProcessor = /** @class */ (function () {
                     case 2:
                         if (!(_i < files_1.length)) return [3 /*break*/, 11];
                         file = files_1[_i];
-                        fileExtension = path.extname(file.filename);
+                        fileExtension = path_1.default.extname(file.filename);
                         if (!(this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed')) return [3 /*break*/, 10];
                         _a.label = 3;
                     case 3:
@@ -93,10 +94,10 @@ var PullRequestProcessor = /** @class */ (function () {
                         console.log('validation', validation);
                         workspaceDirectory = process.env.GITHUB_WORKSPACE;
                         if (workspaceDirectory) {
-                            newFilePath = path.join(workspaceDirectory, newFileName);
+                            newFilePath = path_1.default.join(workspaceDirectory, newFileName);
                             if (validation == 'true') {
                                 // Write the testcases data to the new file
-                                fs.writeFileSync(newFilePath, testcases);
+                                fs_1.default.writeFileSync(newFilePath, testcases);
                                 console.log('created testcase file successfully.');
                             }
                             else {
@@ -129,9 +130,9 @@ var PullRequestProcessor = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        owner = core.getInput('owner');
-                        repo = core.getInput('owner');
-                        pull_number = parseInt(core.getInput('pull_number'), 10);
+                        owner = core_2.default.getInput('owner');
+                        repo = core_2.default.getInput('owner');
+                        pull_number = parseInt(core_2.default.getInput('pull_number'), 10);
                         return [4 /*yield*/, octokit.request("GET /repos/{owner}/{repo}/pulls/{pull_number}/files", {
                                 owner: owner,
                                 repo: repo,
@@ -157,7 +158,7 @@ var PullRequestProcessor = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        accessToken = core.getInput('PAT');
+                        accessToken = core_2.default.getInput('PAT');
                         githubRawUrl = rawUrl.replace('https://github.com/', 'https://raw.githubusercontent.com/').replace('/raw/', '/');
                         githubRawUrl = githubRawUrl + '?token=' + accessToken;
                         headers = {
@@ -166,7 +167,7 @@ var PullRequestProcessor = /** @class */ (function () {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 4, , 5]);
-                        return [4 /*yield*/, fetch(githubRawUrl, { headers: headers })];
+                        return [4 /*yield*/, (0, node_fetch_1.default)(githubRawUrl, { headers: headers })];
                     case 2:
                         response = _a.sent();
                         if (!response.ok) {
