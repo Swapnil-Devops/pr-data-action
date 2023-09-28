@@ -1,13 +1,13 @@
 import { Octokit } from "@octokit/core";
-// import fetch from "node-fetch";
-const fetch = require("node-fetch");
-// import fs from "fs";
-const fs = require('fs');
-// import { writeFileSync } from "fs";
-const core = require("@actions/core");
-// import core from "@actions/core";
-// import path from "path";
-const path = require("path");
+import fetch from "node-fetch";
+// const fetch = require("node-fetch");
+import fs from "fs";
+// const fs = require('fs');
+import { writeFileSync } from "fs";
+// const core = require("@actions/core");
+import core from "@actions/core";
+import path from "path";
+// const path = require("path");
 import OpenAIAssistant from "./fullfillmet/gpt";
 import { generateTestcasePrompt, validateTestcasePrompt } from "./constant";
 
