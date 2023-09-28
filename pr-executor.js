@@ -40,6 +40,7 @@ var core_1 = require("@octokit/core");
 var node_fetch_1 = require("node-fetch");
 // const fetch = require("node-fetch");
 var fs_1 = require("fs");
+// const fs = require('fs');
 // const core = require("@actions/core");
 var core_2 = require("@actions/core");
 var path_1 = require("path");

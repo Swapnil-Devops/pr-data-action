@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var pr_executor_1 = require("./pr-executor");
+var pr_executor_ts_1 = require("./pr-executor.ts");
 function main() {
     return __awaiter(this, void 0, void 0, function () {
         var prProcessor, error_1;
@@ -44,7 +44,7 @@ function main() {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
-                    prProcessor = new pr_executor_1.default();
+                    prProcessor = new pr_executor_ts_1.default();
                     return [4 /*yield*/, prProcessor.processFiles()];
                 case 1:
                     _a.sent();
