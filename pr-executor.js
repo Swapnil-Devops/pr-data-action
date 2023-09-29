@@ -36,18 +36,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = require("@octokit/core");
-// const { Octokit } = require("@octokit/core");
-var node_fetch_1 = require("node-fetch");
-// const fetch = require("node-fetch");
-var fs_1 = require("fs");
-// const fs = require('fs');
-var core = require("@actions/core");
-// const core = require("@actions/core");
-var path_1 = require("path");
-// const path = require("path");
-var gpt_1 = require("./fullfillmet/gpt");
-var constant_1 = require("./constant");
+import * as core_1 from "@octokit/core";
+import * as node_fetch_1 from "node-fetch";
+import * as fs_1 from "fs";
+import * as core from "@actions/core";
+import * as path_1 from "path";
+import * as gpt_1 from "./fullfillmet/gpt";
+import * as constant_1 from "./constant";
+
 var PullRequestProcessor = /** @class */ (function () {
     function PullRequestProcessor() {
         this.generator = new gpt_1.default();
