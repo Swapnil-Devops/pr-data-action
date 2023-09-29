@@ -36,7 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var pr_executor_1 = require("./pr-executor");
+import * as pr_executor_1 from "./pr-executor";
+
 function main() {
     return __awaiter(this, void 0, void 0, function () {
         var prProcessor, error_1;
