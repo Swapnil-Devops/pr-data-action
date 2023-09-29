@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es2016",
+    "target": "ES6",
     "moduleResolution": "Node",
     "module":"ES6",
+    "esModuleInterop": true,
     // "allowImportingTsExtensions": true,
     // "removeComments": true,
     // "noEmit": true,
     // "noEmitOnError": true,
-    "esModuleInterop": true,
     // "forceConsistentCasingInFileNames": true,
   }
 }

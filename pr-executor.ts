@@ -2,7 +2,7 @@ import { Octokit } from "@octokit/core";
 // const { Octokit } = require("@octokit/core");
 import fetch from "node-fetch";
 // const fetch = require("node-fetch");
-import fs from "fs";
+import * as fs from "fs";
 // const fs = require('fs');
 import * as core from "@actions/core";
 // const core = require("@actions/core");
