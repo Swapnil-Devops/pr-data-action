@@ -1,6 +1,9 @@
 import fetch from "node-fetch";
 import * as core from "@actions/core";
 
+// const fetch = require('node-fetch');
+// const core  = require('@actions/core');
+
 class OpenAIAssistant 
 {
   private api_key: string;
