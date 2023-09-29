@@ -46,7 +46,7 @@ var gpt_1 = require("./fullfilments/gpt");
 var generateTestcasePrompt;
 var validateTestcasePrompt;
 // Read the content of the custom extension text file
-var fileContent = fs_1.default.readFileSync('prompts.pmt', 'utf-8');
+var fileContent = fs_1.readFileSync('prompts.pmt', 'utf-8');
 // Parse the content into JavaScript variables
 eval("(function() {".concat(fileContent, "})()"));
 // Define a class named PullRequestProcessor
@@ -62,7 +62,7 @@ var PullRequestProcessor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 12, , 13]);
-                        accessToken = core_2.default.getInput('PAT_key');
+                        accessToken = core_2.getInput('PAT_key');
                         octokit = new core_1.Octokit({ auth: "token ".concat(accessToken), request: { fetch: node_fetch_1.default } });
                         return [4 /*yield*/, this.getPullRequestFiles(octokit)];
                     case 1:
@@ -72,7 +72,7 @@ var PullRequestProcessor = /** @class */ (function () {
                     case 2:
                         if (!(_i < files_1.length)) return [3 /*break*/, 11];
                         file = files_1[_i];
-                        fileExtension = path_1.default.extname(file.filename);
+                        fileExtension = path_1.extname(file.filename);
                         if (!(this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed')) return [3 /*break*/, 10];
                         _a.label = 3;
                     case 3:
@@ -98,10 +98,10 @@ var PullRequestProcessor = /** @class */ (function () {
                         newFileName = _a.sent();
                         workspaceDirectory = process.env.GITHUB_WORKSPACE;
                         if (workspaceDirectory) {
-                            newFilePath = path_1.default.join(workspaceDirectory, newFileName);
+                            newFilePath = path_1.join(workspaceDirectory, newFileName);
                             if (validation === 'true') {
                                 // Write the testcases data to the new file
-                                fs_1.default.writeFileSync(newFilePath, testcases);
+                                fs_1.writeFileSync(newFilePath, testcases);
                                 console.log('created testcase file successfully.');
                             }
                             else {
@@ -135,9 +135,9 @@ var PullRequestProcessor = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        owner = core_2.default.getInput('owner');
-                        repo = core_2.default.getInput('repo');
-                        pull_number = parseInt(core_2.default.getInput('pull_number'), 10);
+                        owner = core_2.getInput('owner');
+                        repo = core_2.getInput('repo');
+                        pull_number = parseInt(core_2.getInput('pull_number'), 10);
                         return [4 /*yield*/, octokit.request("GET /repos/{owner}/{repo}/pulls/{pull_number}/files", {
                                 owner: owner,
                                 repo: repo,
@@ -165,7 +165,7 @@ var PullRequestProcessor = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        accesstoken = core_2.default.getInput('PAT_key');
+                        accesstoken = core_2.getInput('PAT_key');
                         githubRawUrl = rawUrl.replace('https://github.com/', 'https://raw.githubusercontent.com/').replace('/raw/', '/');
                         githubRawUrl = githubRawUrl + '?token=' + accesstoken;
                         headers = {
