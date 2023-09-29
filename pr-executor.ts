@@ -10,11 +10,11 @@ import OpenAIAssistant from "./fullfilments/gpt";
 let generateTestcasePrompt: string;
 let validateTestcasePrompt: string;
 
-// Read the content of the custom extension text file
-const fileContent: string = fs.readFileSync('prompts.pmt', 'utf-8');
+// Specify the full path to the 'prompts.pmt' file
+const promptsFilePath: string = path.join(__dirname, 'prompts.pmt');
 
-// Parse the content into JavaScript variables
-eval(`(function() {${fileContent}})()`);
+// Read the content of the custom extension text file
+const fileContent: string = fs.readFileSync(promptsFilePath, 'utf-8')
 
 // Define a class named PullRequestProcessor
 class PullRequestProcessor {
