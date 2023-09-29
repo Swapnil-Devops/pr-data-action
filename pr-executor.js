@@ -62,7 +62,7 @@ var PullRequestProcessor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 12, , 13]);
-                        accessToken = core_2.getInput('PAT_key');
+                        accessToken = core_2.getInput('PAT');
                         octokit = new core_1.Octokit({ auth: "token ".concat(accessToken), request: { fetch: node_fetch_1.default } });
                         return [4 /*yield*/, this.getPullRequestFiles(octokit)];
                     case 1:
@@ -165,7 +165,7 @@ var PullRequestProcessor = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        accesstoken = core_2.getInput('PAT_key');
+                        accesstoken = core_2.getInput('PAT');
                         githubRawUrl = rawUrl.replace('https://github.com/', 'https://raw.githubusercontent.com/').replace('/raw/', '/');
                         githubRawUrl = githubRawUrl + '?token=' + accesstoken;
                         headers = {

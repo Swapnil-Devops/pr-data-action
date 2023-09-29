@@ -28,7 +28,7 @@ class PullRequestProcessor {
     async processFiles(): Promise<void> {
         try {
             // Get the personal access token from GitHub Actions input
-            const accessToken: string = core.getInput('PAT_key');
+            const accessToken: string = core.getInput('PAT');
             // Create an Octokit instance with the provided access token
             const octokit: Octokit = new Octokit({ auth: `token ${accessToken}`, request: { fetch } });
 
@@ -120,7 +120,7 @@ class PullRequestProcessor {
 
     // Method to get the content of a file
     async getFileContent(rawUrl: string): Promise<string> {
-        const accesstoken: string = core.getInput('PAT_key');
+        const accesstoken: string = core.getInput('PAT');
         let githubRawUrl: string = rawUrl.replace('https://github.com/', 'https://raw.githubusercontent.com/').replace('/raw/', '/');
         githubRawUrl = githubRawUrl + '?token=' + accesstoken;
         const headers = {
