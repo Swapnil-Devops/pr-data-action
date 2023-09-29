@@ -1,9 +1,6 @@
 import fetch from "node-fetch";
 import * as core from "@actions/core";
 
-import fixPath from 'fix-path';
-fixPath();
-
 // const fetch = require('node-fetch');
 // const core  = require('@actions/core');
 
