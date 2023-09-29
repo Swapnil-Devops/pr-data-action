@@ -14,10 +14,10 @@
     "@actions/github": "^5.1.1",
     "@octokit/core": "^5.0.0",
     "@octokit/rest": "^20.0.1",
+    "@types/node-fetch": "^2.6.6",
     "axios": "^1.5.0",
     "fix-path": "^3.0.0",
     "fs": "^0.0.1-security",
-    "node-fetch": "^2.7.0",
     "path": "^0.12.7"
   },
   "devDependencies": {
