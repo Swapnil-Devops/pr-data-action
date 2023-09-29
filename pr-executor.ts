@@ -1,106 +1,100 @@
 import { Octokit } from "@octokit/core";
-// const { Octokit } = require("@octokit/core");
+import github from "@actions/github";
 import fetch from "node-fetch";
-// const fetch = require("node-fetch");
-import * as fs from "fs";
-// const fs = require('fs');
-import * as core from "@actions/core";
-// const core = require("@actions/core");
+import fs from "fs";
+import core from "@actions/core";
 import path from "path";
-// const path = require("path");
-import OpenAIAssistant from "./fullfillmet/gpt";
-import { generateTestcasePrompt, validateTestcasePrompt } from "./constant";
+import OpenAIAssistant from "./fullfilments/gpt";
 
-import fixPath from 'fix-path';
-fixPath();
+// Initialize the variables
+let generateTestcasePrompt: string;
+let validateTestcasePrompt: string;
 
-interface PullRequestFile 
-{
-    filename: string;
-    status: string;
-    raw_url: string;
-}
+// Read the content of the custom extension text file
+const fileContent: string = fs.readFileSync('prompts.pmt', 'utf-8');
 
-class PullRequestProcessor 
-{
+// Parse the content into JavaScript variables
+eval(`(function() {${fileContent}})()`);
+
+// Define a class named PullRequestProcessor
+class PullRequestProcessor {
     private generator: OpenAIAssistant;
 
-    constructor() 
-    {
+    constructor() {
+        // Initialize an instance of the OpenAIAssistant class
         this.generator = new OpenAIAssistant();
     }
 
-    async processFiles(): Promise<void> 
-    {
-        try 
-        {
-            const accessToken: string = core.getInput('PAT');
+    async processFiles(): Promise<void> {
+        try {
+            // Get the personal access token from GitHub Actions input
+            const accessToken: string = core.getInput('PAT_key');
+            // Create an Octokit instance with the provided access token
             const octokit: Octokit = new Octokit({ auth: `token ${accessToken}`, request: { fetch } });
 
-            const files: PullRequestFile[] = await this.getPullRequestFiles(octokit);
+            // Get a list of files in the pull request
+            const files: any[] = await this.getPullRequestFiles(octokit);
 
-            for (const file of files) 
-            {
+            // Loop through the files in the pull request
+            for (const file of files) {
+                // Get the file extension
                 const fileExtension: string = path.extname(file.filename);
-                if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') 
-                {
-                    try 
-                    {
-                        const fileContent: string = await this.getFileContent(octokit, file.raw_url);
-                        const newFileName: string = await this.generateTestFileName(file.filename, fileExtension);
+                // Check if the file extension is allowed for processing
+                if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
+                    try {
+                        // Get the content of the file
+                        const fileContent: string = await this.getFileContent(file.raw_url);
 
                         // Split the content into lines
                         const lines: string[] = fileContent.split("\n");
 
-                        // Find the first non-blank line containing "generate" and "testcase"
-                        const firstMatchingLine: string | undefined = lines.find((line: string) => 
-                        {
-                            const trimmedLine: string = line.trim();
-                            return trimmedLine.length > 0 && trimmedLine.includes("generate") && trimmedLine.includes("testcase");
-                        });
+                        // Find the first non-blank line
+                        const firstNonBlankLine: string | undefined = lines.find((line) => line.trim().length > 0);
 
-                        if (firstMatchingLine) 
-                        {
+                        // Check if the first non-blank line contains both "generate" and "testcase"
+                        const containsGenerateAndTestcase: boolean = !!(
+                            firstNonBlankLine &&
+                            firstNonBlankLine.includes("generate") &&
+                            firstNonBlankLine.includes("testcase")
+                        );
+
+                        if (containsGenerateAndTestcase) {
+                            // Generate test cases based on the file content
                             const testcases: string = await this.generateTestCases(fileContent, file.filename);
-                            // console.log('testcases', testcases);
+                            // Generate validation code for the test cases
                             const validation: string = await this.generateValidationCode(fileContent, testcases);
 
                             console.log('validation', validation);
-
+                            // Generate a new file name for the test cases
+                            const newFileName: string = await this.generateTestFileName(file.filename, fileExtension);
+                            // Get the workspace directory path
                             const workspaceDirectory: string | undefined = process.env.GITHUB_WORKSPACE;
-                            if (workspaceDirectory) 
-                            {
+                            if (workspaceDirectory) {
+                                // Create the full path for the new test file
                                 const newFilePath: string = path.join(workspaceDirectory, newFileName);
 
-                                if (validation == 'true') 
-                                {
+                                if (validation === 'true') {
                                     // Write the testcases data to the new file
                                     fs.writeFileSync(newFilePath, testcases);
                                     console.log('created testcase file successfully.');
-                                } 
-                                else 
-                                {
+                                } else {
                                     console.log('failed testcase:', testcases);
                                 }
                             }
                         }
-                    } 
-                    catch (error) 
-                    {
+                    } catch (error) {
                         console.error("Error fetching or processing file content:", error);
                     }
                 }
             }
-        } 
-        catch (error) 
-        {
+        } catch (error) {
             console.error("Error:", error);
             process.exit(1);
         }
     }
 
-    async getPullRequestFiles(octokit: Octokit): Promise<PullRequestFile[]> 
-    {
+    // Method to get the list of files in the pull request
+    async getPullRequestFiles(octokit: Octokit): Promise<any[]> {
         const owner: string = core.getInput('owner');
         const repo: string = core.getInput('repo');
         const pull_number: number = parseInt(core.getInput('pull_number'), 10);
@@ -110,8 +104,7 @@ class PullRequestProcessor
                 owner,
                 repo,
                 pull_number,
-                headers: 
-                {
+                headers: {
                     "X-GitHub-Api-Version": "2022-11-28",
                 },
             }
@@ -119,37 +112,32 @@ class PullRequestProcessor
         return response.data;
     }
 
-    isFileExtensionAllowed(fileExtension: string): boolean 
-    {
+    // Method to check if a file extension is allowed for processing
+    isFileExtensionAllowed(fileExtension: string): boolean {
         const allowedExtensions: string[] = [".js", ".ts", ".py", ".rs", ".cpp", ".cxs", ".hpp"];
         return allowedExtensions.includes(fileExtension);
     }
 
-    async getFileContent(octokit: Octokit, rawUrl: string): Promise<string> 
-    {
-        const accessToken: string = core.getInput('PAT');
+    // Method to get the content of a file
+    async getFileContent(rawUrl: string): Promise<string> {
+        const accesstoken: string = core.getInput('PAT_key');
         let githubRawUrl: string = rawUrl.replace('https://github.com/', 'https://raw.githubusercontent.com/').replace('/raw/', '/');
-        githubRawUrl = githubRawUrl + '?token=' + accessToken;
+        githubRawUrl = githubRawUrl + '?token=' + accesstoken;
         const headers = {
-            "Authorization": `token ${accessToken}`
+            "Authorization": `token ${accesstoken}`
         };
 
-        try 
-        {
+        try {
             const response = await fetch(githubRawUrl, { headers });
 
-            if (!response.ok) 
-            {
+            if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
             const data: string = await response.text();
             return data;
-        } 
-        catch (error) 
-        {
+        } catch (error) {
             console.error("Error fetching the file:", error);
-            throw error; // Rethrow the error
         }
     }
 
@@ -205,13 +193,11 @@ class PullRequestProcessor
         }
     }
 
-
-    generateTestFileName(originalFileName: string, fileExtension: string): string 
-    {
+    // Method to generate a new file name for test cases
+    generateTestFileName(originalFileName: string, fileExtension: string): string {
         return originalFileName.replace(fileExtension, ".test" + fileExtension);
     }
 }
 
-
-
+// Export the PullRequestProcessor class
 export default PullRequestProcessor;

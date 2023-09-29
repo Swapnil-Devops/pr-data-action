@@ -37,29 +37,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@octokit/core");
-// const { Octokit } = require("@octokit/core");
 var node_fetch_1 = require("node-fetch");
-// const fetch = require("node-fetch");
-var fs = require("fs");
-// const fs = require('fs');
-var core = require("@actions/core");
-// const core = require("@actions/core");
+var fs_1 = require("fs");
+var core_2 = require("@actions/core");
 var path_1 = require("path");
-// const path = require("path");
-var gpt_1 = require("./fullfillmet/gpt");
-var constant_1 = require("./constant");
+var gpt_1 = require("./fullfilments/gpt");
+// Initialize the variables
+var generateTestcasePrompt;
+var validateTestcasePrompt;
+// Read the content of the custom extension text file
+var fileContent = fs_1.default.readFileSync('prompts.pmt', 'utf-8');
+// Parse the content into JavaScript variables
+eval("(function() {".concat(fileContent, "})()"));
+// Define a class named PullRequestProcessor
 var PullRequestProcessor = /** @class */ (function () {
     function PullRequestProcessor() {
+        // Initialize an instance of the OpenAIAssistant class
         this.generator = new gpt_1.default();
     }
     PullRequestProcessor.prototype.processFiles = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var accessToken, octokit, files, _i, files_1, file, fileExtension, fileContent, newFileName, lines, firstMatchingLine, testcases, validation, workspaceDirectory, newFilePath, error_1, error_2;
+            var accessToken, octokit, files, _i, files_1, file, fileExtension, fileContent_1, lines, firstNonBlankLine, containsGenerateAndTestcase, testcases, validation, newFileName, workspaceDirectory, newFilePath, error_1, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 12, , 13]);
-                        accessToken = core.getInput('PAT');
+                        accessToken = core_2.default.getInput('PAT_key');
                         octokit = new core_1.Octokit({ auth: "token ".concat(accessToken), request: { fetch: node_fetch_1.default } });
                         return [4 /*yield*/, this.getPullRequestFiles(octokit)];
                     case 1:
@@ -69,36 +72,36 @@ var PullRequestProcessor = /** @class */ (function () {
                     case 2:
                         if (!(_i < files_1.length)) return [3 /*break*/, 11];
                         file = files_1[_i];
-                        fileExtension = path_1.extname(file.filename);
+                        fileExtension = path_1.default.extname(file.filename);
                         if (!(this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed')) return [3 /*break*/, 10];
                         _a.label = 3;
                     case 3:
                         _a.trys.push([3, 9, , 10]);
-                        return [4 /*yield*/, this.getFileContent(octokit, file.raw_url)];
+                        return [4 /*yield*/, this.getFileContent(file.raw_url)];
                     case 4:
-                        fileContent = _a.sent();
-                        return [4 /*yield*/, this.generateTestFileName(file.filename, fileExtension)];
+                        fileContent_1 = _a.sent();
+                        lines = fileContent_1.split("\n");
+                        firstNonBlankLine = lines.find(function (line) { return line.trim().length > 0; });
+                        containsGenerateAndTestcase = !!(firstNonBlankLine &&
+                            firstNonBlankLine.includes("generate") &&
+                            firstNonBlankLine.includes("testcase"));
+                        if (!containsGenerateAndTestcase) return [3 /*break*/, 8];
+                        return [4 /*yield*/, this.generateTestCases(fileContent_1, file.filename)];
                     case 5:
-                        newFileName = _a.sent();
-                        lines = fileContent.split("\n");
-                        firstMatchingLine = lines.find(function (line) {
-                            var trimmedLine = line.trim();
-                            return trimmedLine.length > 0 && trimmedLine.includes("generate") && trimmedLine.includes("testcase");
-                        });
-                        if (!firstMatchingLine) return [3 /*break*/, 8];
-                        return [4 /*yield*/, this.generateTestCases(fileContent, file.filename)];
-                    case 6:
                         testcases = _a.sent();
-                        return [4 /*yield*/, this.generateValidationCode(fileContent, testcases)];
-                    case 7:
+                        return [4 /*yield*/, this.generateValidationCode(fileContent_1, testcases)];
+                    case 6:
                         validation = _a.sent();
                         console.log('validation', validation);
+                        return [4 /*yield*/, this.generateTestFileName(file.filename, fileExtension)];
+                    case 7:
+                        newFileName = _a.sent();
                         workspaceDirectory = process.env.GITHUB_WORKSPACE;
                         if (workspaceDirectory) {
-                            newFilePath = path_1.join(workspaceDirectory, newFileName);
-                            if (validation == 'true') {
+                            newFilePath = path_1.default.join(workspaceDirectory, newFileName);
+                            if (validation === 'true') {
                                 // Write the testcases data to the new file
-                                fs.writeFileSync(newFilePath, testcases);
+                                fs_1.default.writeFileSync(newFilePath, testcases);
                                 console.log('created testcase file successfully.');
                             }
                             else {
@@ -125,15 +128,16 @@ var PullRequestProcessor = /** @class */ (function () {
             });
         });
     };
+    // Method to get the list of files in the pull request
     PullRequestProcessor.prototype.getPullRequestFiles = function (octokit) {
         return __awaiter(this, void 0, void 0, function () {
             var owner, repo, pull_number, response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        owner = core.getInput('owner');
-                        repo = core.getInput('repo');
-                        pull_number = parseInt(core.getInput('pull_number'), 10);
+                        owner = core_2.default.getInput('owner');
+                        repo = core_2.default.getInput('repo');
+                        pull_number = parseInt(core_2.default.getInput('pull_number'), 10);
                         return [4 /*yield*/, octokit.request("GET /repos/{owner}/{repo}/pulls/{pull_number}/files", {
                                 owner: owner,
                                 repo: repo,
@@ -149,21 +153,23 @@ var PullRequestProcessor = /** @class */ (function () {
             });
         });
     };
+    // Method to check if a file extension is allowed for processing
     PullRequestProcessor.prototype.isFileExtensionAllowed = function (fileExtension) {
         var allowedExtensions = [".js", ".ts", ".py", ".rs", ".cpp", ".cxs", ".hpp"];
         return allowedExtensions.includes(fileExtension);
     };
-    PullRequestProcessor.prototype.getFileContent = function (octokit, rawUrl) {
+    // Method to get the content of a file
+    PullRequestProcessor.prototype.getFileContent = function (rawUrl) {
         return __awaiter(this, void 0, void 0, function () {
-            var accessToken, githubRawUrl, headers, response, data, error_3;
+            var accesstoken, githubRawUrl, headers, response, data, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        accessToken = core.getInput('PAT');
+                        accesstoken = core_2.default.getInput('PAT_key');
                         githubRawUrl = rawUrl.replace('https://github.com/', 'https://raw.githubusercontent.com/').replace('/raw/', '/');
-                        githubRawUrl = githubRawUrl + '?token=' + accessToken;
+                        githubRawUrl = githubRawUrl + '?token=' + accesstoken;
                         headers = {
-                            "Authorization": "token ".concat(accessToken)
+                            "Authorization": "token ".concat(accesstoken)
                         };
                         _a.label = 1;
                     case 1:
@@ -181,7 +187,7 @@ var PullRequestProcessor = /** @class */ (function () {
                     case 4:
                         error_3 = _a.sent();
                         console.error("Error fetching the file:", error_3);
-                        throw error_3; // Rethrow the error
+                        return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
                 }
             });
@@ -193,7 +199,7 @@ var PullRequestProcessor = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        prompt = constant_1.generateTestcasePrompt + filename + '. The code is:\n' + fileContent;
+                        prompt = generateTestcasePrompt + filename + '. The code is:\n' + fileContent;
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -223,7 +229,7 @@ var PullRequestProcessor = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        testcasevalidation = fileContent + 'This is the code.\n' + testcases + constant_1.validateTestcasePrompt;
+                        testcasevalidation = fileContent + 'This is the code.\n' + testcases + validateTestcasePrompt;
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -247,9 +253,11 @@ var PullRequestProcessor = /** @class */ (function () {
             });
         });
     };
+    // Method to generate a new file name for test cases
     PullRequestProcessor.prototype.generateTestFileName = function (originalFileName, fileExtension) {
         return originalFileName.replace(fileExtension, ".test" + fileExtension);
     };
     return PullRequestProcessor;
 }());
+// Export the PullRequestProcessor class
 exports.default = PullRequestProcessor;
