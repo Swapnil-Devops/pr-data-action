@@ -1,4 +1,4 @@
-import PullRequestProcessor from './pr-executor.ts';
+import PullRequestProcessor from './pr-executor';
 
 async function main(): Promise<void> 
 {

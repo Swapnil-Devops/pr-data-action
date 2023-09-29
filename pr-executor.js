@@ -42,15 +42,15 @@ var node_fetch_1 = require("node-fetch");
 // const fetch = require("node-fetch");
 var fs_1 = require("fs");
 // const fs = require('fs');
+var core = require("@actions/core");
 // const core = require("@actions/core");
-var core_2 = require("@actions/core");
 var path_1 = require("path");
 // const path = require("path");
-var gpt_ts_1 = require("./fullfillmet/gpt.ts");
-var constant_ts_1 = require("./constant.ts");
+var gpt_1 = require("./fullfillmet/gpt");
+var constant_1 = require("./constant");
 var PullRequestProcessor = /** @class */ (function () {
     function PullRequestProcessor() {
-        this.generator = new gpt_ts_1.default();
+        this.generator = new gpt_1.default();
     }
     PullRequestProcessor.prototype.processFiles = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -59,7 +59,7 @@ var PullRequestProcessor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 12, , 13]);
-                        accessToken = core_2.default.getInput('PAT');
+                        accessToken = core.getInput('PAT');
                         octokit = new core_1.Octokit({ auth: "token ".concat(accessToken), request: { fetch: node_fetch_1.default } });
                         return [4 /*yield*/, this.getPullRequestFiles(octokit)];
                     case 1:
@@ -131,9 +131,9 @@ var PullRequestProcessor = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        owner = core_2.default.getInput('owner');
-                        repo = core_2.default.getInput('owner');
-                        pull_number = parseInt(core_2.default.getInput('pull_number'), 10);
+                        owner = core.getInput('owner');
+                        repo = core.getInput('owner');
+                        pull_number = parseInt(core.getInput('pull_number'), 10);
                         return [4 /*yield*/, octokit.request("GET /repos/{owner}/{repo}/pulls/{pull_number}/files", {
                                 owner: owner,
                                 repo: repo,
@@ -159,7 +159,7 @@ var PullRequestProcessor = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        accessToken = core_2.default.getInput('PAT');
+                        accessToken = core.getInput('PAT');
                         githubRawUrl = rawUrl.replace('https://github.com/', 'https://raw.githubusercontent.com/').replace('/raw/', '/');
                         githubRawUrl = githubRawUrl + '?token=' + accessToken;
                         headers = {
@@ -193,7 +193,7 @@ var PullRequestProcessor = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        prompt = constant_ts_1.generateTestcasePrompt + filename + '. The code is:\n' + fileContent;
+                        prompt = constant_1.generateTestcasePrompt + filename + '. The code is:\n' + fileContent;
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -223,7 +223,7 @@ var PullRequestProcessor = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        testcasevalidation = fileContent + 'This is the code.\n' + testcases + constant_ts_1.validateTestcasePrompt;
+                        testcasevalidation = fileContent + 'This is the code.\n' + testcases + constant_1.validateTestcasePrompt;
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
