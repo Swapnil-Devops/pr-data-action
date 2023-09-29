@@ -95,7 +95,7 @@ var PullRequestProcessor = /** @class */ (function () {
                         console.log('validation', validation);
                         workspaceDirectory = process.env.GITHUB_WORKSPACE;
                         if (workspaceDirectory) {
-                            newFilePath = path_1.default.join(workspaceDirectory, newFileName);
+                            newFilePath = path_1.join(workspaceDirectory, newFileName);
                             if (validation == 'true') {
                                 // Write the testcases data to the new file
                                 fs.writeFileSync(newFilePath, testcases);
