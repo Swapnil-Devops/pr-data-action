@@ -38,6 +38,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var node_fetch_1 = require("node-fetch");
 var core = require("@actions/core");
+// const fetch = require('node-fetch');
+// const core  = require('@actions/core');
 var OpenAIAssistant = /** @class */ (function () {
     /**
      * Initializes a new instance of the OpenAIAssistant class.

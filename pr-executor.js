@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@octokit/core");
+// const { Octokit } = require("@octokit/core");
 var node_fetch_1 = require("node-fetch");
 // const fetch = require("node-fetch");
 var fs_1 = require("fs");
@@ -45,11 +46,11 @@ var fs_1 = require("fs");
 var core_2 = require("@actions/core");
 var path_1 = require("path");
 // const path = require("path");
-var gpt_1 = require("./fullfillmet/gpt");
-var constant_1 = require("./constant");
+var gpt_ts_1 = require("./fullfillmet/gpt.ts");
+var constant_ts_1 = require("./constant.ts");
 var PullRequestProcessor = /** @class */ (function () {
     function PullRequestProcessor() {
-        this.generator = new gpt_1.default();
+        this.generator = new gpt_ts_1.default();
     }
     PullRequestProcessor.prototype.processFiles = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -192,7 +193,7 @@ var PullRequestProcessor = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        prompt = constant_1.generateTestcasePrompt + filename + '. The code is:\n' + fileContent;
+                        prompt = constant_ts_1.generateTestcasePrompt + filename + '. The code is:\n' + fileContent;
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -222,7 +223,7 @@ var PullRequestProcessor = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        testcasevalidation = fileContent + 'This is the code.\n' + testcases + constant_1.validateTestcasePrompt;
+                        testcasevalidation = fileContent + 'This is the code.\n' + testcases + constant_ts_1.validateTestcasePrompt;
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
