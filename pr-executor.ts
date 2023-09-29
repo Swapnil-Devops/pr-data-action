@@ -16,6 +16,9 @@ const promptsFilePath: string = path.join(__dirname, 'prompts.pmt');
 // Read the content of the custom extension text file
 const fileContent: string = fs.readFileSync(promptsFilePath, 'utf-8')
 
+// Parse the content into JavaScript variables
+eval(`(function() {${fileContent}})()`);
+
 // Define a class named PullRequestProcessor
 class PullRequestProcessor {
     private generator: OpenAIAssistant;

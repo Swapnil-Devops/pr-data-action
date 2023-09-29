@@ -49,6 +49,8 @@ var validateTestcasePrompt;
 var promptsFilePath = path_1.join(__dirname, 'prompts.pmt');
 // Read the content of the custom extension text file
 var fileContent = fs_1.readFileSync(promptsFilePath, 'utf-8');
+// Parse the content into JavaScript variables
+eval("(function() {".concat(fileContent, "})()"));
 // Define a class named PullRequestProcessor
 var PullRequestProcessor = /** @class */ (function () {
     function PullRequestProcessor() {
