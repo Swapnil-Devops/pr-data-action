@@ -132,7 +132,7 @@ var PullRequestProcessor = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         owner = core.getInput('owner');
-                        repo = core.getInput('owner');
+                        repo = core.getInput('repo');
                         pull_number = parseInt(core.getInput('pull_number'), 10);
                         return [4 /*yield*/, octokit.request("GET /repos/{owner}/{repo}/pulls/{pull_number}/files", {
                                 owner: owner,

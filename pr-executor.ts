@@ -102,7 +102,7 @@ class PullRequestProcessor
     async getPullRequestFiles(octokit: Octokit): Promise<PullRequestFile[]> 
     {
         const owner: string = core.getInput('owner');
-        const repo: string = core.getInput('owner');
+        const repo: string = core.getInput('repo');
         const pull_number: number = parseInt(core.getInput('pull_number'), 10);
         const response = await octokit.request(
             "GET /repos/{owner}/{repo}/pulls/{pull_number}/files",
