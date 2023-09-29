@@ -11,6 +11,9 @@ import path from "path";
 import OpenAIAssistant from "./fullfillmet/gpt";
 import { generateTestcasePrompt, validateTestcasePrompt } from "./constant";
 
+import fixPath from 'fix-path';
+fixPath();
+
 interface PullRequestFile 
 {
     filename: string;

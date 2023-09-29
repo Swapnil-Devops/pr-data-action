@@ -1,5 +1,6 @@
 import PullRequestProcessor from './pr-executor';
-
+import fixPath from 'fix-path';
+fixPath();
 async function main(): Promise<void> 
 {
     try 
