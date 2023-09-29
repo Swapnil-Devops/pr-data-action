@@ -69,7 +69,7 @@ var PullRequestProcessor = /** @class */ (function () {
                     case 2:
                         if (!(_i < files_1.length)) return [3 /*break*/, 11];
                         file = files_1[_i];
-                        fileExtension = path_1.default.extname(file.filename);
+                        fileExtension = path_1.extname(file.filename);
                         if (!(this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed')) return [3 /*break*/, 10];
                         _a.label = 3;
                     case 3:
