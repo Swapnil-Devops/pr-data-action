@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { Octokit } from "@octokit/core";
 import fetch from "node-fetch";
-import fs from "fs";
+import * as fs from "fs";
 import * as core from "@actions/core";
 import * as path from "path";
 import OpenAIAssistant from "./fullfilments/gpt";
