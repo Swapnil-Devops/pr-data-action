@@ -4,6 +4,7 @@
     "moduleResolution": "Node",
     "module":"ES6",
     "esModuleInterop": true,
+    "outDir": "artifacts/"
     // "allowImportingTsExtensions": true,
     // "removeComments": true,
     // "noEmit": true,

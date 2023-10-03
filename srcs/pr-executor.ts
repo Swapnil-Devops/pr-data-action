@@ -1,23 +1,24 @@
 import { Octokit } from "@octokit/core";
-import github from "@actions/github";
 import fetch from "node-fetch";
 import fs from "fs";
-import core from "@actions/core";
-import path from "path";
+import * as core from "@actions/core";
+import * as path from "path";
 import OpenAIAssistant from "./fullfilments/gpt";
 
 // Initialize the variables
 let generateTestcasePrompt: string;
 let validateTestcasePrompt: string;
 
-// Specify the full path to the 'prompts.pmt' file
-const promptsFilePath: string = path.join(__dirname, 'prompts.pmt');
+// Specify the full paths to the files inside the 'prompts' folder
+const generateTestcasePromptFilePath: string  = path.join(__dirname, 'prompts', 'generateTestcasePrompt.pmt');
 
-// Read the content of the custom extension text file
-const fileContent: string = fs.readFileSync(promptsFilePath, 'utf-8')
+const validateTestcasePromptFilePath: string  = path.join(__dirname, 'prompts', 'validateTestcasePrompt.pmt');
 
-// Parse the content into JavaScript variables
-eval(`(function() {${fileContent}})()`);
+// Read the content of the 'generateTestcasePrompt.pmt' file
+generateTestcasePrompt = fs.readFileSync(generateTestcasePromptFilePath, 'utf-8');
+
+// Read the content of the 'validateTestcasePrompt.pmt' file
+validateTestcasePrompt = fs.readFileSync(validateTestcasePromptFilePath, 'utf-8');
 
 // Define a class named PullRequestProcessor
 class PullRequestProcessor {
