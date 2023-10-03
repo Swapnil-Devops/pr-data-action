@@ -1,14 +1,20 @@
 {
+  "compileOnSave": true,
   "compilerOptions": {
     "target": "ES6",
     "moduleResolution": "Node",
     "module":"ES6",
     "esModuleInterop": true,
-    "outDir": "artifacts/"
+    "outDir": "artifacts/",
     // "allowImportingTsExtensions": true,
     // "removeComments": true,
     // "noEmit": true,
     // "noEmitOnError": true,
     // "forceConsistentCasingInFileNames": true,
-  }
+  },
+
+  "exclude": [
+    "node_modules",
+    "srcs/**/*.test.ts"
+  ]
 }
