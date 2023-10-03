@@ -1,3 +1,27 @@
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,69 +31,51 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Octokit } from "@octokit/core";
-import fetch from "node-fetch";
-import * as fs from "fs";
-import * as core from "@actions/core";
-import * as path from "path";
-import OpenAIAssistant from "./gpt";
-// Initialize the variables
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const core_1 = require("@octokit/core");
+const node_fetch_1 = __importDefault(require("node-fetch"));
+const fs = __importStar(require("fs"));
+const core = __importStar(require("@actions/core"));
+const path = __importStar(require("path"));
+const gpt_1 = __importDefault(require("./gpt"));
 let generateTestcasePrompt;
 let validateTestcasePrompt;
-// Specify the full paths to the files inside the 'prompts' folder
 const generateTestcasePromptFilePath = path.join(__dirname, 'prompts', 'generateTestcasePrompt.pmt');
 const validateTestcasePromptFilePath = path.join(__dirname, 'prompts', 'validateTestcasePrompt.pmt');
-// Read the content of the 'generateTestcasePrompt.pmt' file
 generateTestcasePrompt = fs.readFileSync(generateTestcasePromptFilePath, 'utf-8');
-// Read the content of the 'validateTestcasePrompt.pmt' file
 validateTestcasePrompt = fs.readFileSync(validateTestcasePromptFilePath, 'utf-8');
-// Define a class named PullRequestProcessor
 class PullRequestProcessor {
     constructor() {
-        // Initialize an instance of the OpenAIAssistant class
-        this.generator = new OpenAIAssistant();
+        this.generator = new gpt_1.default();
     }
     processFiles() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                // Get the personal access token from GitHub Actions input
                 const accessToken = core.getInput('PAT');
-                // Create an Octokit instance with the provided access token
-                const octokit = new Octokit({ auth: `token ${accessToken}`, request: { fetch } });
-                // Get a list of files in the pull request
+                const octokit = new core_1.Octokit({ auth: `token ${accessToken}`, request: { fetch: node_fetch_1.default } });
                 const files = yield this.getPullRequestFiles(octokit);
-                // Loop through the files in the pull request
                 for (const file of files) {
-                    // Get the file extension
                     const fileExtension = path.extname(file.filename);
-                    // Check if the file extension is allowed for processing
                     if (this.isFileExtensionAllowed(fileExtension) && file.status !== 'removed') {
                         try {
-                            // Get the content of the file
                             const fileContent = yield this.getFileContent(file.raw_url);
-                            // Split the content into lines
                             const lines = fileContent.split("\n");
-                            // Find the first non-blank line
                             const firstNonBlankLine = lines.find((line) => line.trim().length > 0);
-                            // Check if the first non-blank line contains both "generate" and "testcase"
                             const containsGenerateAndTestcase = !!(firstNonBlankLine &&
                                 firstNonBlankLine.includes("generate") &&
                                 firstNonBlankLine.includes("testcase"));
                             if (containsGenerateAndTestcase) {
-                                // Generate test cases based on the file content
                                 const testcases = yield this.generateTestCases(fileContent, file.filename);
-                                // Generate validation code for the test cases
                                 const validation = yield this.generateValidationCode(fileContent, testcases);
                                 console.log('validation', validation);
-                                // Generate a new file name for the test cases
                                 const newFileName = yield this.generateTestFileName(file.filename, fileExtension);
-                                // Get the workspace directory path
                                 const workspaceDirectory = process.env.GITHUB_WORKSPACE;
                                 if (workspaceDirectory) {
-                                    // Create the full path for the new test file
                                     const newFilePath = path.join(workspaceDirectory, newFileName);
                                     if (validation === 'true') {
-                                        // Write the testcases data to the new file
                                         fs.writeFileSync(newFilePath, testcases);
                                         console.log('created testcase file successfully.');
                                     }
@@ -91,7 +97,6 @@ class PullRequestProcessor {
             }
         });
     }
-    // Method to get the list of files in the pull request
     getPullRequestFiles(octokit) {
         return __awaiter(this, void 0, void 0, function* () {
             const owner = core.getInput('owner');
@@ -108,12 +113,10 @@ class PullRequestProcessor {
             return response.data;
         });
     }
-    // Method to check if a file extension is allowed for processing
     isFileExtensionAllowed(fileExtension) {
         const allowedExtensions = [".js", ".ts", ".py", ".rs", ".cpp", ".cxs", ".hpp"];
         return allowedExtensions.includes(fileExtension);
     }
-    // Method to get the content of a file
     getFileContent(rawUrl) {
         return __awaiter(this, void 0, void 0, function* () {
             const accesstoken = core.getInput('PAT');
@@ -123,7 +126,7 @@ class PullRequestProcessor {
                 "Authorization": `token ${accesstoken}`
             };
             try {
-                const response = yield fetch(githubRawUrl, { headers });
+                const response = yield (0, node_fetch_1.default)(githubRawUrl, { headers });
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -139,9 +142,7 @@ class PullRequestProcessor {
         return __awaiter(this, void 0, void 0, function* () {
             const prompt = generateTestcasePrompt + filename + '. The code is:\n' + fileContent;
             try {
-                // Call the generate method to get the assistant's reply
                 const response = yield this.generator.generate(prompt);
-                // Access the assistant's reply property and return it as a string
                 if (response && response.assistantReply) {
                     return response.assistantReply;
                 }
@@ -151,7 +152,7 @@ class PullRequestProcessor {
             }
             catch (error) {
                 console.error('Error:', error);
-                throw error; // Optionally rethrow the error for further handling in the workflow
+                throw error;
             }
         });
     }
@@ -159,9 +160,7 @@ class PullRequestProcessor {
         return __awaiter(this, void 0, void 0, function* () {
             const testcasevalidation = fileContent + 'This is the code.\n' + testcases + validateTestcasePrompt;
             try {
-                // Call the generate method to get the assistant's reply
                 const response = yield this.generator.generate(testcasevalidation);
-                // Access the assistant's reply property and return it as a string
                 if (response && response.assistantReply) {
                     return response.assistantReply;
                 }
@@ -171,14 +170,12 @@ class PullRequestProcessor {
             }
             catch (error) {
                 console.error('Error:', error);
-                throw error; // Optionally rethrow the error for further handling in the workflow
+                throw error;
             }
         });
     }
-    // Method to generate a new file name for test cases
     generateTestFileName(originalFileName, fileExtension) {
         return originalFileName.replace(fileExtension, ".test" + fileExtension);
     }
 }
-// Export the PullRequestProcessor class
-export default PullRequestProcessor;
+exports.default = PullRequestProcessor;

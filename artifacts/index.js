@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,11 +8,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import PullRequestProcessor from './pr-executor';
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const pr_executor_1 = __importDefault(require("./pr-executor"));
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const prProcessor = new PullRequestProcessor();
+            const prProcessor = new pr_executor_1.default();
             yield prProcessor.processFiles();
         }
         catch (error) {
@@ -19,5 +24,4 @@ function main() {
         }
     });
 }
-// Run the main function
 main();
