@@ -12,7 +12,7 @@ import fetch from "node-fetch";
 import * as fs from "fs";
 import * as core from "@actions/core";
 import * as path from "path";
-import OpenAIAssistant from "./fullfilments/gpt";
+import OpenAIAssistant from "./gpt";
 // Initialize the variables
 let generateTestcasePrompt;
 let validateTestcasePrompt;
