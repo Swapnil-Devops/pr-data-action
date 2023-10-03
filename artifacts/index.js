@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import PullRequestProcessor from './srcs/pr-executor';
+import PullRequestProcessor from './pr-executor';
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
