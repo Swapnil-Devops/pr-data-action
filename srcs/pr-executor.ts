@@ -10,9 +10,9 @@ let generateTestcasePrompt: string;
 let validateTestcasePrompt: string;
 
 // Specify the full paths to the files inside the 'prompts' folder
-const generateTestcasePromptFilePath: string  = path.join(__dirname, 'prompts', 'generateTestcasePrompt.pmt');
+const generateTestcasePromptFilePath: string  = path.join(__dirname, '..', 'prompts', 'generateTestcasePrompt.pmt');
 
-const validateTestcasePromptFilePath: string  = path.join(__dirname, 'prompts', 'validateTestcasePrompt.pmt');
+const validateTestcasePromptFilePath: string  = path.join(__dirname, '..',  'prompts', 'validateTestcasePrompt.pmt');
 
 // Read the content of the 'generateTestcasePrompt.pmt' file
 generateTestcasePrompt = fs.readFileSync(generateTestcasePromptFilePath, 'utf-8');

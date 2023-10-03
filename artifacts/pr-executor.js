@@ -43,8 +43,8 @@ const path = __importStar(require("path"));
 const gpt_1 = __importDefault(require("./gpt"));
 let generateTestcasePrompt;
 let validateTestcasePrompt;
-const generateTestcasePromptFilePath = path.join(__dirname, 'prompts', 'generateTestcasePrompt.pmt');
-const validateTestcasePromptFilePath = path.join(__dirname, 'prompts', 'validateTestcasePrompt.pmt');
+const generateTestcasePromptFilePath = path.join(__dirname, '..', 'prompts', 'generateTestcasePrompt.pmt');
+const validateTestcasePromptFilePath = path.join(__dirname, '..', 'prompts', 'validateTestcasePrompt.pmt');
 generateTestcasePrompt = fs.readFileSync(generateTestcasePromptFilePath, 'utf-8');
 validateTestcasePrompt = fs.readFileSync(validateTestcasePromptFilePath, 'utf-8');
 class PullRequestProcessor {
